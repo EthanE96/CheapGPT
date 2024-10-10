@@ -1,0 +1,28 @@
+# # https://github.com/firebase/firebase-tools
+
+# name: Firebase Deploy UI - Stage
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - "ui/**"
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#       - run: npm ci
+#         working-directory: ./ui
+#       - run: npm run build
+#         working-directory: ./ui
+#       - uses: FirebaseExtended/action-hosting-deploy@v0
+#         with:
+#           repoToken: ${{ secrets.GITHUB_TOKEN }}
+#           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MOMENTUM_CC0FF }}
+#           projectId: momentum-cc0ff
+#           entryPoint: ./ui
+#           channelId: staging #this is the deployment channel, could be preview or live
+#         env:
+#           FIREBASE_CLI_EXPERIMENTS: webframeworks
