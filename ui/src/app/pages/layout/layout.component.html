@@ -1,6 +1,6 @@
 <div class="navbar bg-base-100">
   <div class="flex-none">
-    <app-drawer></app-drawer>
+    <app-drawer (chatChange)="onChatChange($event)"></app-drawer>
   </div>
   <div class="flex-1">
     <a class="btn btn-ghost text-xl">CheapGPT</a>
@@ -11,4 +11,4 @@
     ></app-modal-settings>
   </div>
 </div>
-<app-chat></app-chat>
+<app-chat [chatString]="chatString"></app-chat>

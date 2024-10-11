@@ -16,8 +16,9 @@
       <div class="chat-bubble">Hey! What can I do for you?</div>
     </div>
 
-    <ng-container *ngFor="let message of messages">
+    <ng-container *ngIf="chatString">
       <div
+        *ngFor="let message of chatString.message"
         class="chat py-3"
         [ngClass]="{
           'chat-end': message.isUser,

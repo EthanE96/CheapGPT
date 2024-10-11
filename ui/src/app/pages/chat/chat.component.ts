@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { LayoutComponent } from '../layout/layout.component';
+import { ChatString } from '../../models/chat';
 
 @Component({
   selector: 'app-chat',
@@ -10,24 +11,33 @@ import { LayoutComponent } from '../layout/layout.component';
   styleUrl: './chat.component.scss',
 })
 export class ChatComponent {
-  messages: ChatMessage[] = [];
+  @Input() chatString?: ChatString;
 
   sendMessage(content: string) {
     if (content.trim() !== '') {
       this.addMessage(content, true);
-      // Simulate a response (replace with actual API call in a real app)
-      setTimeout(() => this.addMessage(`I received: ${content}`, false), 1000);
-      console.log(this.messages);
+
+      // will send the new message to the AI, then wait for ai to respond, then add the ai response to the chat string
+      setTimeout(() => this.addMessage(`I received: ${content}`, false), 500);
+
+      console.log(this.chatString); //! remove
     }
   }
 
   private addMessage(content: string, isUser: boolean) {
-    this.messages.push({ content, isUser, token: 50 });
-  }
-}
+    // if existing chat string
+    if (this.chatString && this.chatString.message) {
+      this.chatString.message.push({ content, isUser, date: new Date() });
+    }
 
-export interface ChatMessage {
-  content: string;
-  isUser: boolean;
-  token: number;
+    // if new chat string
+    else {
+      this.chatString = {
+        message: [{ content, isUser, date: new Date() }],
+        model: '',
+        apiKey: '',
+        title: 'New Chat',
+      };
+    }
+  }
 }
