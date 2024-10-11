@@ -1,1 +1,58 @@
-<p>chat works!</p>
+<div class="flex flex-col w-1/2 mx-auto" style="height: 90vh">
+  <div class="flex-none h-20"></div>
+
+  <!-- Replace image with picture of the model -->
+
+  <div class="grow overflow-y-auto">
+    <div class="chat chat-start">
+      <div class="chat-image avatar">
+        <div class="w-10 rounded-full">
+          <img
+            alt="Tailwind CSS chat bubble component"
+            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+          />
+        </div>
+      </div>
+      <div class="chat-bubble">Hey! What can I do for you?</div>
+    </div>
+
+    <ng-container *ngFor="let message of messages">
+      <div
+        class="chat py-3"
+        [ngClass]="{
+          'chat-end': message.isUser,
+          'chat-start': !message.isUser
+        }"
+      >
+        <!-- Image -->
+        <ng-container *ngIf="!message.isUser">
+          <div class="chat-image avatar">
+            <div class="w-10 rounded-full">
+              <img
+                alt="Tailwind CSS chat bubble component"
+                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+              />
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Message -->
+        <div class="chat-bubble">{{ message.content }}</div>
+        <div class="chat-footer opacity-50">{{ message.token }}</div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="flex-none flex gap-2 mt-4">
+    <input
+      #input
+      type="text"
+      placeholder="Type here"
+      class="input input-bordered w-full"
+      (keyup.enter)="sendMessage(input.value); input.value = ''"
+    />
+    <button class="btn" (click)="sendMessage(input.value); input.value = ''">
+      Send
+    </button>
+  </div>
+</div>
