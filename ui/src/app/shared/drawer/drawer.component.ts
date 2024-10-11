@@ -25,6 +25,7 @@ export class DrawerComponent implements OnInit {
   getChats() {
     this.chatStrings = this.chatService.getAllChats();
   }
+
   handleClick(chatString?: ChatString) {
     //^ send to chat component
     if (chatString) {
@@ -32,5 +33,21 @@ export class DrawerComponent implements OnInit {
       console.log(chatString); //! remove
     }
     this.isChecked = !this.isChecked;
+  }
+
+  newChat() {
+    this.chatStrings.push({
+      message: [],
+      model: '',
+      apiKey: '',
+      title: 'New Chat',
+    });
+    this.chatChange.emit(this.chatStrings);
+    this.isChecked = !this.isChecked;
+  }
+
+  clearChat() {
+    this.chatStrings = [];
+    this.newChat();
   }
 }

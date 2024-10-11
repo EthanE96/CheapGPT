@@ -27,4 +27,12 @@ export class LayoutComponent {
     this.chatString = chatString;
     console.log('layout chat string updated', chatString);
   }
+
+  newChat() {
+    this.chatString = {
+      model: '',
+      apiKey: '',
+      title: '',
+    };
+  }
 }

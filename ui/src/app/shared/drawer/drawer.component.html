@@ -25,16 +25,30 @@
   </div>
   <div class="drawer-side">
     <label for="my-drawer" class="drawer-overlay"></label>
-    <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4 z-10">
+    <div class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
       <h1 class="text-2xl font-bold p-2">Chat History</h1>
       <ng-container *ngFor="let chatString of chatStrings">
-        <!-- Sidebar content here -->
-        <li>
-          <a (click)="handleClick(chatString)">{{ chatString.title }}</a>
-        </li>
+        <ul>
+          <li>
+            <a (click)="handleClick(chatString)">{{ chatString.title }}</a>
+          </li>
+        </ul>
       </ng-container>
 
+      <div class="p-4 mt-auto">
+        <div class="flex justify-between">
+          <button class="btn btn-primary flex-grow mr-2" (click)="newChat()">
+            New Chat
+          </button>
+          <button
+            class="btn btn-secondary flex-grow ml-2"
+            (click)="clearChat()"
+          >
+            Clear Chat
+          </button>
+        </div>
+      </div>
       <!-- TODO: Clear history button on bottom / and handle overflow -->
-    </ul>
+    </div>
   </div>
 </div>
