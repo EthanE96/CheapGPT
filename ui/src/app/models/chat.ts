@@ -3,8 +3,8 @@ export interface ChatString {
   model: string;
   apiKey: string;
   title: string;
-  TotalTokens?: number;
-  TotalCost?: number;
+  totalTokens?: number;
+  totalCost?: number;
 }
 
 export interface Message {

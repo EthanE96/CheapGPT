@@ -29,8 +29,8 @@ export class ChatService {
         model: 'gpt-3.5-turbo',
         apiKey: '',
         title: 'Math',
-        TotalTokens: 120,
-        TotalCost: 0.03,
+        totalTokens: 120,
+        totalCost: 0.03,
       },
       {
         message: [
@@ -52,8 +52,8 @@ export class ChatService {
         model: 'gpt-3.5-turbo',
         apiKey: '',
         title: 'Car',
-        TotalTokens: 120,
-        TotalCost: 0.03,
+        totalTokens: 120,
+        totalCost: 0.03,
       },
     ];
     return chatStrings;
@@ -80,8 +80,8 @@ export class ChatService {
       model: 'gpt-3.5-turbo',
       apiKey: '',
       title: 'Math',
-      TotalTokens: 120,
-      TotalCost: 0.03,
+      totalTokens: 120,
+      totalCost: 0.03,
     };
     return chatString;
   }

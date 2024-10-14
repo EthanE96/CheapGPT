@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Request, Response } from "express";
+import { deleteChat, getChat, getChats, postChat, postMessage } from "./controllers/chatController";
 
 const router = Router();
 
@@ -16,6 +17,11 @@ router.get("/health", (req: Request, res: Response) => {
 });
 
 //^ Private routes with authentication
-// /api/
+// /api/chat
+router.post("/chats", postChat);
+router.get("/chats", getChats);
+router.get("/chats/:id", getChat);
+router.delete("/chats/:id", deleteChat);
+router.post("/chats/:id/messages", postMessage);
 
 export default router;

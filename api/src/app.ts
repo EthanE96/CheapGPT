@@ -1,13 +1,13 @@
 import express, { Application, Request } from "express";
 import cors from "cors";
 import { json, urlencoded } from "body-parser";
-//import { connectDB } from "./config/db";
+import { connectDB } from "./config/db";
 import routes from "./routes";
 import morgan from "morgan";
 
 const app: Application = express();
 
-//connectDB();
+connectDB();
 
 app.use(cors());
 app.use(json());
