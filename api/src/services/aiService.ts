@@ -55,8 +55,12 @@ export const aiNewMessage = async (chat: Chat, newMessage: string): Promise<Chat
   //maybe new function that uses the new message to set the title, can use a super cheap ai model
 
   // Message converter
-  if (!chat.message) {
+  if (!chat.message || chat.message.length === 0) {
     chat.message = [];
+    chat.message.push({
+      content: newMessage,
+      isUser: true,
+    });
   }
   const messages = convertMessages(chat.message);
 
@@ -75,8 +79,21 @@ export const aiNewMessage = async (chat: Chat, newMessage: string): Promise<Chat
     tokens: output.response_metadata.tokenUsage,
   });
 
-  //TODO: Update total tokens
+  // Update total tokens
+  if (!chat.totalTokens || !chat.totalTokens.totalTokens) {
+    console.log("setting tokens to zero");
+    chat.totalTokens = {
+      totalTokens: 0,
+      promptTokens: 0,
+      completionTokens: 0,
+    };
+  }
+  chat.totalTokens.totalTokens += output.response_metadata.tokenUsage.totalTokens;
+  chat.totalTokens.promptTokens += output.response_metadata.tokenUsage.promptTokens;
+  chat.totalTokens.completionTokens += output.response_metadata.tokenUsage.completionTokens;
+
   //TODO: Update total cost
 
+  console.log(output);
   return chat;
 };

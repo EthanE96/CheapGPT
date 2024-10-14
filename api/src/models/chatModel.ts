@@ -18,9 +18,9 @@ export interface Message {
 }
 
 export interface Tokens {
-  totalTokens: 106;
-  promptTokens: 92;
-  completionTokens: 14;
+  totalTokens: number;
+  promptTokens: number;
+  completionTokens: number;
 }
 
 const chatSchema = new Schema({
