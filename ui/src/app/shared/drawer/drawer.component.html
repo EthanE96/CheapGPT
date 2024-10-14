@@ -4,10 +4,11 @@
     type="checkbox"
     class="drawer-toggle"
     [checked]="isChecked"
+    (change)="getChats()"
   />
   <div class="drawer-content">
     <!-- Page content here -->
-    <button class="btn btn-square btn-ghost" (click)="handleClick()">
+    <button class="btn btn-square btn-ghost" (click)="onClose()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -24,13 +25,13 @@
     </button>
   </div>
   <div class="drawer-side">
-    <label for="my-drawer" class="drawer-overlay"></label>
+    <label for="my-drawer" class="drawer-overlay" (click)="onClose()"></label>
     <div class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
       <h1 class="text-2xl font-bold p-2">Chat History</h1>
-      <ng-container *ngFor="let chatString of chatStrings">
+      <ng-container *ngFor="let chat of chats$ | async">
         <ul>
           <li>
-            <a (click)="handleClick(chatString)">{{ chatString.title }}</a>
+            <a (click)="selectChat(chat)">{{ chat.title }}</a>
           </li>
         </ul>
       </ng-container>

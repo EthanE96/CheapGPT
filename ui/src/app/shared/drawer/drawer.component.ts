@@ -1,7 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
-import { ChatString } from '../../models/chat';
+import { Chat } from '../../models/chat';
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-drawer',
@@ -12,42 +13,38 @@ import { CommonModule } from '@angular/common';
 })
 export class DrawerComponent implements OnInit {
   @Output() chatChange = new EventEmitter();
-
   isChecked: boolean = false;
-  chatStrings: ChatString[] = [];
-
+  chats$: Observable<Chat[]> = new Observable();
   constructor(private chatService: ChatService) {}
+
+  //TODO: When click on button to open, then get chats
 
   ngOnInit(): void {
     this.getChats();
   }
 
   getChats() {
-    this.chatStrings = this.chatService.getAllChats();
+    this.chats$ = this.chatService.getChats();
   }
 
-  handleClick(chatString?: ChatString) {
-    //^ send to chat component
-    if (chatString) {
-      this.chatChange.emit(chatString);
-      console.log(chatString); //! remove
-    }
-    this.isChecked = !this.isChecked;
+  selectChat(chat: Chat) {
+    // send to chat component
+    this.chatChange.emit(chat);
+    this.onClose();
   }
 
   newChat() {
-    this.chatStrings.push({
-      message: [],
-      model: '',
-      apiKey: '',
-      title: 'New Chat',
+    //! THIS IS NOT WORKING
+    const chat = this.chatService.postChat({
+      model: 'GPT-4',
+      apiKey: 'Test key',
     });
-    this.chatChange.emit(this.chatStrings);
-    this.isChecked = !this.isChecked;
+    console.log('new chat', chat);
   }
 
-  clearChat() {
-    this.chatStrings = [];
-    this.newChat();
+  clearChat() {}
+
+  onClose() {
+    this.isChecked = !this.isChecked;
   }
 }

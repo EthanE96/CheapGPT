@@ -16,9 +16,9 @@
       <div class="chat-bubble">Hey! What can I do for you?</div>
     </div>
 
-    <ng-container *ngIf="chatString">
+    <ng-container *ngIf="chat">
       <div
-        *ngFor="let message of chatString.message"
+        *ngFor="let message of chat.message"
         class="chat py-3"
         [ngClass]="{
           'chat-end': message.isUser,
@@ -39,7 +39,7 @@
 
         <!-- Message -->
         <div class="chat-bubble">{{ message.content }}</div>
-        <div class="chat-footer opacity-50">{{ message.token }}</div>
+        <div class="chat-footer opacity-50">{{ message.tokens }}</div>
       </div>
     </ng-container>
   </div>

@@ -1,88 +1,55 @@
 import { Injectable } from '@angular/core';
-import { ChatString } from '../models/chat';
+import { Chat } from '../models/chat';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../environments/environment.dev';
+import { catchError, Observable, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
-  constructor() {}
+  constructor(private http: HttpClient) {}
+  baseURL = environment.apiUrl;
 
-  getAllChats() {
-    const chatStrings: ChatString[] = [
-      {
-        message: [
-          {
-            content: 'Hello, what is 3 + 3?',
-            isUser: true,
-            token: 50,
-            cost: 0.01,
-            date: new Date(),
-          },
-          {
-            content: 'The answer is 6.',
-            isUser: false,
-            token: 70,
-            cost: 0.2,
-            date: new Date(),
-          },
-        ],
-        model: 'gpt-3.5-turbo',
-        apiKey: '',
-        title: 'Math',
-        totalTokens: 120,
-        totalCost: 0.03,
-      },
-      {
-        message: [
-          {
-            content: 'Hello, what the best car?',
-            isUser: true,
-            token: 50,
-            cost: 0.01,
-            date: new Date(),
-          },
-          {
-            content: 'The answer is a toyota landcruiser.',
-            isUser: false,
-            token: 70,
-            cost: 0.2,
-            date: new Date(),
-          },
-        ],
-        model: 'gpt-3.5-turbo',
-        apiKey: '',
-        title: 'Car',
-        totalTokens: 120,
-        totalCost: 0.03,
-      },
-    ];
-    return chatStrings;
+  //* CRUD Functions
+  //^ Get Chats
+  getChats(): Observable<Chat[]> {
+    return this.http
+      .get<Chat[]>(`${this.baseURL}/chats`)
+      .pipe(catchError(this.handleError));
   }
 
-  getChat(): ChatString {
-    const chatString: ChatString = {
-      message: [
-        {
-          content: 'Hello, what is 3 + 3?',
-          isUser: true,
-          token: 50,
-          cost: 0.01,
-          date: new Date(),
-        },
-        {
-          content: 'The answer is 6.',
-          isUser: false,
-          token: 70,
-          cost: 0.2,
-          date: new Date(),
-        },
-      ],
-      model: 'gpt-3.5-turbo',
-      apiKey: '',
-      title: 'Math',
-      totalTokens: 120,
-      totalCost: 0.03,
-    };
-    return chatString;
+  //^ Get Chat
+  getChat(chatId: string): Observable<Chat> {
+    return this.http
+      .get<Chat>(`${this.baseURL}/chats/${chatId}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  //^ Create Chat
+  postChat(chat: Chat): Observable<Chat> {
+    return this.http
+      .post<Chat>(`${this.baseURL}/chats`, chat)
+      .pipe(catchError(this.handleError));
+  }
+
+  //^ Delete Chat
+  deleteChat(chatId: string): Observable<Chat> {
+    return this.http
+      .delete<Chat>(`${this.baseURL}/chats/${chatId}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  //^ Create Message
+  postMessage(chatId: string, message: string): Observable<Chat> {
+    return this.http
+      .post<Chat>(`${this.baseURL}/chats/${chatId}/messages`, message)
+      .pipe(catchError(this.handleError));
+  }
+
+  //* Error Handling
+  // sends through the http response error
+  private handleError(error: HttpErrorResponse) {
+    return throwError(() => error.error);
   }
 }

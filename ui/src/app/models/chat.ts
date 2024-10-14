@@ -1,16 +1,22 @@
-export interface ChatString {
+export interface Chat {
   message?: Message[];
   model: string;
   apiKey: string;
-  title: string;
-  totalTokens?: number;
+  title?: string;
+  totalTokens?: Tokens;
   totalCost?: number;
 }
 
 export interface Message {
   content: string;
   isUser: boolean;
-  token?: number;
+  tokens?: Tokens;
   cost?: number;
-  date: Date;
+  date?: Date;
+}
+
+export interface Tokens {
+  totalTokens: number;
+  promptTokens: number;
+  completionTokens: number;
 }

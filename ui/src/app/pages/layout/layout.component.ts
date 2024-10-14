@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
 import { ModalSettingsComponent } from '../../shared/modal-settings/modal-settings.component';
 import { DrawerComponent } from '../../shared/drawer/drawer.component';
-import { ChatString } from '../../models/chat';
+import { Chat } from '../../models/chat';
 
 @Component({
   selector: 'app-layout',
@@ -12,7 +12,7 @@ import { ChatString } from '../../models/chat';
   styleUrl: './layout.component.scss',
 })
 export class LayoutComponent {
-  chatString: ChatString = {
+  chat: Chat = {
     model: '',
     apiKey: '',
     title: '',
@@ -23,16 +23,10 @@ export class LayoutComponent {
     console.log(model);
   }
 
-  onChatChange(chatString: ChatString) {
-    this.chatString = chatString;
-    console.log('layout chat string updated', chatString);
+  onChatChange(chat: Chat) {
+    this.chat = chat;
+    console.log('layout chat string updated', chat);
   }
 
-  newChat() {
-    this.chatString = {
-      model: '',
-      apiKey: '',
-      title: '',
-    };
-  }
+  newChat() {}
 }
