@@ -4,11 +4,10 @@
     type="checkbox"
     class="drawer-toggle"
     [checked]="isChecked"
-    (change)="getChats()"
   />
   <div class="drawer-content">
     <!-- Page content here -->
-    <button class="btn btn-square btn-ghost" (click)="onClose()">
+    <button class="btn btn-square btn-ghost" (click)="onOpen()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -31,21 +30,27 @@
       <ng-container *ngFor="let chat of chats$ | async">
         <ul>
           <li>
-            <a (click)="selectChat(chat)">{{ chat.title }}</a>
+            <div class="flex">
+              <div class="flex-1">
+                <a (click)="onSelect(chat)">{{ chat.title }}</a>
+              </div>
+              <div class="flex-none">
+                <a class="btn btn-square btn-ghost" (click)="onDelete(chat)"
+                  ><lucide-icon [img]="Trash" class="w-4 h-4"></lucide-icon
+                ></a>
+              </div>
+            </div>
           </li>
         </ul>
       </ng-container>
 
       <div class="p-4 mt-auto">
         <div class="flex justify-between">
-          <button class="btn btn-primary flex-grow mr-2" (click)="newChat()">
+          <button class="btn btn-primary flex-grow mr-2" (click)="onNew()">
             New Chat
           </button>
-          <button
-            class="btn btn-secondary flex-grow ml-2"
-            (click)="clearChat()"
-          >
-            Clear Chat
+          <button class="btn btn-secondary flex-grow ml-2" (click)="onClear()">
+            Clear Chats
           </button>
         </div>
       </div>

@@ -42,6 +42,16 @@ export const removeChat = async (id: string): Promise<Chat | null> => {
   }
 };
 
+//^ Delete Chats
+export const removeChats = async () => {
+  try {
+    return await Chat.deleteMany().exec();
+  } catch (error) {
+    console.error(`Error deleting chats: ${error}`);
+    throw error;
+  }
+};
+
 //^ Update Chat
 export const updateChat = async (id: string, update: Partial<Chat>): Promise<Chat | null> => {
   try {

@@ -19,13 +19,13 @@ export class LayoutComponent {
   };
 
   onModelChange(model: unknown) {
-    console.log('model changed');
+    console.log('model changed'); //! remove
     console.log(model);
   }
 
   onChatChange(chat: Chat) {
     this.chat = chat;
-    console.log('layout chat string updated', chat);
+    console.log('layout chat selected', chat); //! remove
   }
 
   newChat() {}

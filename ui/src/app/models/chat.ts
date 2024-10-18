@@ -1,4 +1,5 @@
 export interface Chat {
+  _id?: string;
   message?: Message[];
   model: string;
   apiKey: string;

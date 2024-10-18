@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createChat, fetchChats, fetchChat, removeChat, createMessage } from "../services/chatService";
+import { createChat, fetchChats, fetchChat, removeChat, createMessage, removeChats, updateChat } from "../services/chatService";
 
 //^ Post Chat
 export const postChat = async (req: Request, res: Response) => {
@@ -41,6 +41,20 @@ export const getChat = async (req: Request, res: Response) => {
   }
 };
 
+//^ Update Chat
+export const patchChat = async (req: Request, res: Response) => {
+  try {
+    const updatedChat = await updateChat(req.params.id, req.body);
+    if (!updatedChat) {
+      res.status(404).json({ error: "Chat not found" });
+      return;
+    }
+    res.status(200).json(updatedChat);
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
 //^ Delete Chat
 export const deleteChat = async (req: Request, res: Response) => {
   try {
@@ -50,6 +64,16 @@ export const deleteChat = async (req: Request, res: Response) => {
       return;
     }
     res.status(200).json(chat);
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+//^ Delete Chats
+export const deleteChats = async (req: Request, res: Response) => {
+  try {
+    const numberDeleted = await removeChats();
+    res.status(200).json(numberDeleted);
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }

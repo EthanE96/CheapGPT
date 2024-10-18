@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Request, Response } from "express";
-import { deleteChat, getChat, getChats, postChat, postMessage } from "./controllers/chatController";
+import { deleteChat, deleteChats, getChat, getChats, postChat, postMessage, patchChat } from "./controllers/chatController";
 
 const router = Router();
 
@@ -21,7 +21,9 @@ router.get("/health", (req: Request, res: Response) => {
 router.post("/chats", postChat);
 router.get("/chats", getChats);
 router.get("/chats/:id", getChat);
+router.patch("/chats/:id", patchChat);
 router.delete("/chats/:id", deleteChat);
+router.delete("/chats", deleteChats);
 router.post("/chats/:id/messages", postMessage);
 
 export default router;

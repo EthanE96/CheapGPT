@@ -33,10 +33,24 @@ export class ChatService {
       .pipe(catchError(this.handleError));
   }
 
+  //^ Edit Chat
+  patchChat(chat: Chat): Observable<Chat> {
+    return this.http
+      .patch<Chat>(`${this.baseURL}/chats/${chat._id}`, chat)
+      .pipe(catchError(this.handleError));
+  }
+
   //^ Delete Chat
   deleteChat(chatId: string): Observable<Chat> {
     return this.http
       .delete<Chat>(`${this.baseURL}/chats/${chatId}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  //^ Delete All Chats
+  deleteChats(): Observable<number> {
+    return this.http
+      .delete<number>(`${this.baseURL}/chats`)
       .pipe(catchError(this.handleError));
   }
 
