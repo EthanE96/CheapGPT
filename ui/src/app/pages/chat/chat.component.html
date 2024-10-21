@@ -38,8 +38,8 @@
         </ng-container>
 
         <!-- Message -->
-        <div class="chat-bubble">{{ message.content }}</div>
-        <div class="chat-footer opacity-50">{{ message.tokens }}</div>
+        <div class="chat-bubble" [innerHTML]="message.content"></div>
+        <!-- <div class="chat-footer opacity-50">{{ message.tokens }}</div> -->
       </div>
     </ng-container>
   </div>

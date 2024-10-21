@@ -10,5 +10,5 @@ import { LayoutComponent } from './pages/layout/layout.component';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'ui';
+  title = 'CheapGPT';
 }

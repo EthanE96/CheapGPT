@@ -1,0 +1,5 @@
+.chat-bubble {
+  pre {
+    @apply text-sm bg-slate-950 text-white p-2 my-4 mx-2 whitespace-pre-wrap rounded-md;
+  }
+}

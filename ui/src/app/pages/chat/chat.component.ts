@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { LayoutComponent } from '../layout/layout.component';
-import { Chat } from '../../models/chat';
+import { Chat, Message } from '../../models/chat';
+import { ChatService } from '../../services/chat.service';
+import { marked } from 'marked';
+import { lastValueFrom, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -9,35 +12,49 @@ import { Chat } from '../../models/chat';
   imports: [CommonModule, LayoutComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class ChatComponent {
   @Input() chat?: Chat;
+  htmlMessages: Message[] = [];
 
-  sendMessage(content: string) {
-    if (content.trim() !== '') {
-      this.addMessage(content, true);
+  constructor(private chatService: ChatService) {}
 
-      // will send the new message to the AI, then wait for ai to respond, then add the ai response to the chat string
-      setTimeout(() => this.addMessage(`I received: ${content}`, false), 500);
+  async sendMessage(content: string) {
+    if (!this.chat?.message) {
+      this.chat = await lastValueFrom(this.createNewChat());
+    }
 
-      console.log(this.chat); //! remove
+    if (content.trim() !== '' && this.chat?._id) {
+      try {
+        this.chatService
+          .postMessage(this.chat._id, content)
+          .subscribe((chat) => {
+            this.chat = chat;
+            this.toHTML(this.chat);
+          });
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
     }
   }
 
-  private addMessage(content: string, isUser: boolean) {
-    // if existing chat string
-    if (this.chat && this.chat.message) {
-      this.chat.message.push({ content, isUser, date: new Date() });
-    }
+  private createNewChat(): Observable<Chat> {
+    return this.chatService.postChat({
+      model: 'GPT-4',
+      apiKey: 'Test key',
+    });
+  }
 
-    // if new chat string
-    else {
-      this.chat = {
-        message: [{ content, isUser, date: new Date() }],
-        model: '',
-        apiKey: '',
-        title: 'New Chat',
-      };
+  private toHTML(chat: Chat): Message[] {
+    if (chat.message) {
+      return chat.message.map((message) => {
+        if (!message.isUser) {
+          message.content = marked(message.content) as string;
+        }
+        return message;
+      });
     }
+    return [];
   }
 }

@@ -3,7 +3,7 @@ import { ChatService } from '../../services/chat.service';
 import { Chat } from '../../models/chat';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Trash } from 'lucide-angular';
-import { Observable, tap } from 'rxjs';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-drawer',
@@ -14,22 +14,23 @@ import { Observable, tap } from 'rxjs';
 })
 export class DrawerComponent implements OnInit {
   readonly Trash = Trash;
-
   @Output() chatChange = new EventEmitter();
   isChecked: boolean = false;
-  chats$: Observable<Chat[]> = new Observable();
+  chats: Chat[] = [];
   constructor(private chatService: ChatService) {}
 
   ngOnInit(): void {
     this.getChats();
   }
 
-  getChats() {
-    this.chats$ = this.chatService.getChats();
-  }
-
   selectChat(chat: Chat) {
     this.chatChange.emit(chat);
+  }
+
+  getChats() {
+    this.chatService.getChats().subscribe((chats) => {
+      this.chats = chats;
+    });
   }
 
   newChat() {
@@ -38,26 +39,29 @@ export class DrawerComponent implements OnInit {
         model: 'GPT-4',
         apiKey: 'Test key',
       })
+      // here will need llm to update title then it calls back
       .pipe(
         tap((chat) => {
           this.selectChat(chat);
         })
       )
-      .subscribe();
-  }
-
-  editChat(chat: Chat) {
-    this.chatService.patchChat(chat).subscribe();
+      .subscribe(() => {
+        this.getChats();
+      });
   }
 
   deleteChat(chat: Chat) {
     if (!chat._id) {
-      return console.error('Chat not found'); //! fix
-    } else {
-      this.chatService.deleteChat(chat._id).subscribe();
+      return console.error('Chat not found');
     }
 
-    //if last chat, create a new chat
+    if (this.chats.length === 1) {
+      this.newChat();
+    }
+
+    this.chatService.deleteChat(chat._id).subscribe(() => {
+      this.getChats();
+    });
   }
 
   onSelect(chat: Chat) {
@@ -65,14 +69,7 @@ export class DrawerComponent implements OnInit {
     this.onClose();
   }
 
-  onEdit(chat: Chat) {
-    console.log('edit', chat); //! remove
-    this.editChat(chat);
-    this.onClose();
-  }
-
   onDelete(chat: Chat) {
-    console.log('delete', chat); //! remove
     this.deleteChat(chat);
     this.onClose();
   }
@@ -93,7 +90,6 @@ export class DrawerComponent implements OnInit {
   }
 
   onOpen() {
-    this.getChats();
     this.isChecked = !this.isChecked;
   }
 }

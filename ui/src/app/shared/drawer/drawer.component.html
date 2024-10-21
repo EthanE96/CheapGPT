@@ -27,19 +27,25 @@
     <label for="my-drawer" class="drawer-overlay" (click)="onClose()"></label>
     <div class="menu bg-base-200 text-base-content min-h-full w-80 p-4">
       <h1 class="text-2xl font-bold p-2">Chat History</h1>
-      <ng-container *ngFor="let chat of chats$ | async">
+      <ng-container *ngFor="let chat of chats">
         <ul>
           <li>
-            <div class="flex">
-              <div class="flex-1">
-                <a (click)="onSelect(chat)">{{ chat.title }}</a>
+            <a (click)="onSelect(chat)" class="block">
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <span class="text-base">{{ chat.title }}</span>
+                </div>
+
+                <div class="flex-none">
+                  <a
+                    class="btn btn-ghost btn-squarebtn-sm"
+                    (click)="onDelete(chat); $event.stopPropagation()"
+                  >
+                    <lucide-icon [img]="Trash" class="w-4 h-4"></lucide-icon>
+                  </a>
+                </div>
               </div>
-              <div class="flex-none">
-                <a class="btn btn-square btn-ghost" (click)="onDelete(chat)"
-                  ><lucide-icon [img]="Trash" class="w-4 h-4"></lucide-icon
-                ></a>
-              </div>
-            </div>
+            </a>
           </li>
         </ul>
       </ng-container>

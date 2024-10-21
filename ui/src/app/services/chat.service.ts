@@ -55,9 +55,20 @@ export class ChatService {
   }
 
   //^ Create Message
+  /**
+   * Posts a new message to an existing chat
+   *
+   * @param chatId The ID of the chat to post the message to
+   * @param message The new message to be posted
+   * @returns The updated chat with the new message
+   */
   postMessage(chatId: string, message: string): Observable<Chat> {
+    const requestBody = {
+      content: message,
+    };
+
     return this.http
-      .post<Chat>(`${this.baseURL}/chats/${chatId}/messages`, message)
+      .post<Chat>(`${this.baseURL}/chats/${chatId}/messages`, requestBody)
       .pipe(catchError(this.handleError));
   }
 
