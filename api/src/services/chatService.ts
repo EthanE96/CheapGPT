@@ -1,8 +1,13 @@
 import { Chat } from "../models/chatModel";
-import { aiNewMessage } from "./aiService";
+import { newAiMessage } from "./aiChatService";
+import { newAiTitle } from "./aiTitleService";
 
 //^ Create Chat
-export const createChat = async (model: string, apiKey: string, title?: string): Promise<Chat> => {
+export const createChat = async (
+  model: string,
+  apiKey: string,
+  title?: string
+): Promise<Chat> => {
   try {
     const newChat = new Chat({ model, apiKey, title });
     return await newChat.save();
@@ -12,7 +17,7 @@ export const createChat = async (model: string, apiKey: string, title?: string):
   }
 };
 
-//^ Get Chats
+//^ Get Multiple Chats
 export const fetchChats = async (): Promise<Chat[]> => {
   try {
     return await Chat.find();
@@ -22,7 +27,7 @@ export const fetchChats = async (): Promise<Chat[]> => {
   }
 };
 
-//^ Get Chat
+//^ Get One Chat
 export const fetchChat = async (id: string): Promise<Chat | null> => {
   try {
     return await Chat.findById(id);
@@ -32,7 +37,7 @@ export const fetchChat = async (id: string): Promise<Chat | null> => {
   }
 };
 
-//^ Delete Chat
+//^ Delete One Chat
 export const removeChat = async (id: string): Promise<Chat | null> => {
   try {
     return await Chat.findByIdAndDelete(id);
@@ -42,7 +47,7 @@ export const removeChat = async (id: string): Promise<Chat | null> => {
   }
 };
 
-//^ Delete Chats
+//^ Delete Multiple Chats
 export const removeChats = async () => {
   try {
     return await Chat.deleteMany().exec();
@@ -52,8 +57,11 @@ export const removeChats = async () => {
   }
 };
 
-//^ Update Chat
-export const updateChat = async (id: string, update: Partial<Chat>): Promise<Chat | null> => {
+//^ Update One Chat
+export const updateChat = async (
+  id: string,
+  update: Partial<Chat>
+): Promise<Chat | null> => {
   try {
     return await Chat.findByIdAndUpdate(id, update, { new: true });
   } catch (error) {
@@ -64,7 +72,10 @@ export const updateChat = async (id: string, update: Partial<Chat>): Promise<Cha
 
 //^ Create Message
 // returns updated chat with the new message
-export const createMessage = async (chatId: string, newMessage: string): Promise<Chat | null> => {
+export const createMessage = async (
+  chatId: string,
+  newMessage: string
+): Promise<Chat | null> => {
   try {
     // if chat doesn't exist
     const chat = await fetchChat(chatId);
@@ -83,8 +94,14 @@ export const createMessage = async (chatId: string, newMessage: string): Promise
       throw new Error("Last message is not a AI message");
     }
 
+    // if new message, add new title
+    if (!lastMessage || lastMessage.content !== newMessage) {
+      const title = await newAiTitle(newMessage);
+      chat.title = title;
+    }
+
     // this function accepts a chat and a new message and returns an updated chat with ai message
-    const updatedChat = await aiNewMessage(chat, newMessage);
+    const updatedChat = await newAiMessage(chat, newMessage);
 
     // save the updated chat
     return await updateChat(chatId, updatedChat);

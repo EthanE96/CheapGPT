@@ -1,18 +1,38 @@
-import { START, END, MessagesAnnotation, StateGraph, MemorySaver } from "@langchain/langgraph";
+//Lang
+import {
+  START,
+  END,
+  MessagesAnnotation,
+  StateGraph,
+  MemorySaver,
+} from "@langchain/langgraph";
 import { v4 as uuidv4 } from "uuid";
-import { llm } from "../ai/ai-model/mixtral-8x7b-32768";
-import { prompt } from "../ai/ai-prompt/basic";
-import { trimmer } from "../ai/ai-config/config";
+import {
+  AIMessage,
+  HumanMessage,
+  SystemMessage,
+} from "@langchain/core/messages";
+
+//AI
+import { trimmer } from "../ai/ai-config/aiConfig";
+import { getAiModel } from "../ai/ai-config/aiModels";
+import { getAiTemplate } from "../ai/ai-config/aiTemplates";
+
+//Models
 import { Chat, Message } from "../models/chatModel";
-import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
 
-//! Here we will need to select the model and key from settings
-
-const callAI = async (input: { messages: (HumanMessage | AIMessage | SystemMessage)[] }) => {
+const chatChain = async (
+  input: {
+    messages: (HumanMessage | AIMessage | SystemMessage)[];
+  },
+  model: string,
+  template: string
+) => {
   // Define the function that calls the model
   const callModel = async (state: typeof MessagesAnnotation.State) => {
-    const chain = prompt.pipe(llm);
-    // Message trimmer
+    const newModel = getAiModel(model);
+    const newTemplate = getAiTemplate(template);
+    const chain = newTemplate.pipe(newModel);
     const trimmedMessage = await trimmer.invoke(state.messages);
 
     const response = await chain.invoke({
@@ -40,7 +60,9 @@ const callAI = async (input: { messages: (HumanMessage | AIMessage | SystemMessa
   return output.messages[output.messages.length - 1];
 };
 
-const convertMessages = (message: Message[]): (SystemMessage | HumanMessage | AIMessage)[] => {
+const convertMessages = (
+  message: Message[]
+): (SystemMessage | HumanMessage | AIMessage)[] => {
   return message.map((message) => {
     if (message.isUser) {
       return new HumanMessage(message.content);
@@ -50,10 +72,10 @@ const convertMessages = (message: Message[]): (SystemMessage | HumanMessage | AI
   });
 };
 
-export const aiNewMessage = async (chat: Chat, newMessage: string): Promise<Chat> => {
-  //How to handle the title (only if set as "New Chat")
-  //maybe new function that uses the new message to set the title, can use a super cheap ai model
-
+export const newAiMessage = async (
+  chat: Chat,
+  newMessage: string
+): Promise<Chat> => {
   // Message converter
   chat.message = chat.message || [];
   chat.message.push({ content: newMessage, isUser: true });
@@ -65,7 +87,7 @@ export const aiNewMessage = async (chat: Chat, newMessage: string): Promise<Chat
   };
 
   // Call AI
-  const output = await callAI(input);
+  const output = await chatChain(input, "mixtral", "chat");
 
   // Update message history with response
   chat.message.push({
@@ -82,11 +104,12 @@ export const aiNewMessage = async (chat: Chat, newMessage: string): Promise<Chat
       completionTokens: 0,
     };
   }
-  chat.totalTokens.totalTokens += output.response_metadata.tokenUsage.totalTokens;
-  chat.totalTokens.promptTokens += output.response_metadata.tokenUsage.promptTokens;
-  chat.totalTokens.completionTokens += output.response_metadata.tokenUsage.completionTokens;
-
-  //TODO: Update total cost
+  chat.totalTokens.totalTokens +=
+    output.response_metadata.tokenUsage.totalTokens;
+  chat.totalTokens.promptTokens +=
+    output.response_metadata.tokenUsage.promptTokens;
+  chat.totalTokens.completionTokens +=
+    output.response_metadata.tokenUsage.completionTokens;
 
   return chat;
 };
