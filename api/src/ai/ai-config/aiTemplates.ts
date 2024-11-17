@@ -1,6 +1,7 @@
 import {
   ChatPromptTemplate,
   MessagesPlaceholder,
+  PromptTemplate,
 } from "@langchain/core/prompts";
 
 export const chatTemplate = ChatPromptTemplate.fromMessages([
@@ -11,26 +12,6 @@ export const chatTemplate = ChatPromptTemplate.fromMessages([
   new MessagesPlaceholder("messages"),
 ]);
 
-export const titleTemplate = ChatPromptTemplate.fromMessages([
-  [
-    "system",
-    "You are my chat title maker. You will analyze the message provided and create a very short and concise title for the chat string. Use as few words as possible and NEVER more than one sentence. Never include periods.",
-  ],
-  new MessagesPlaceholder("title"),
-]);
-
-export const basicTemplate = ChatPromptTemplate.fromMessages([
-  ["system", "You are an AI assistant"],
-  new MessagesPlaceholder("messages"),
-]);
-
-export const getAiTemplate = (template: string): ChatPromptTemplate => {
-  switch (template) {
-    case "chat":
-      return chatTemplate;
-    case "title":
-      return titleTemplate;
-    default:
-      return basicTemplate;
-  }
-};
+export const titleTemplate = PromptTemplate.fromTemplate(
+  "You are my title maker. You will analyze the message provided and create a very short and concise title for the chat. Use as few words as possible and NEVER more than one sentence. Never include periods. Here is the message: {title}"
+);

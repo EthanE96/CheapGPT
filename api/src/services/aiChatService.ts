@@ -16,7 +16,7 @@ import {
 //AI
 import { trimmer } from "../ai/ai-config/aiConfig";
 import { getAiModel } from "../ai/ai-config/aiModels";
-import { getAiTemplate } from "../ai/ai-config/aiTemplates";
+import { chatTemplate } from "../ai/ai-config/aiTemplates";
 
 //Models
 import { Chat, Message } from "../models/chatModel";
@@ -25,14 +25,12 @@ const chatChain = async (
   input: {
     messages: (HumanMessage | AIMessage | SystemMessage)[];
   },
-  model: string,
-  template: string
+  model: string
 ) => {
   // Define the function that calls the model
   const callModel = async (state: typeof MessagesAnnotation.State) => {
     const newModel = getAiModel(model);
-    const newTemplate = getAiTemplate(template);
-    const chain = newTemplate.pipe(newModel);
+    const chain = chatTemplate.pipe(newModel);
     const trimmedMessage = await trimmer.invoke(state.messages);
 
     const response = await chain.invoke({
@@ -87,7 +85,7 @@ export const newAiMessage = async (
   };
 
   // Call AI
-  const output = await chatChain(input, "mixtral", "chat");
+  const output = await chatChain(input, "mixtral");
 
   // Update message history with response
   chat.message.push({
