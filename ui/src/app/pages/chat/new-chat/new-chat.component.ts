@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
-import { Chat } from '../../models/chat';
-import { InputComponent } from '../../shared/input/input.component';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Chat } from '../../../models/chat';
+import { InputComponent } from '../../../shared/input/input.component';
 
 @Component({
   selector: 'app-new-chat',
@@ -11,8 +11,9 @@ import { InputComponent } from '../../shared/input/input.component';
 })
 export class NewChatComponent {
   @Input() chat?: Chat;
+  @Output() messageOut = new EventEmitter<string>();
 
   async newChat(message: string) {
-    console.log('new message', message);
+    this.messageOut.emit(message);
   }
 }

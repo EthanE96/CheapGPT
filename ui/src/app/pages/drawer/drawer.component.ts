@@ -44,9 +44,7 @@ export class DrawerComponent implements OnInit {
   }
 
   onSelectChat(chat: Chat) {
-    // handle in component
     this.chatSelectedChange.emit(chat);
-    console.log('selected chat', chat); //! REMOVE
   }
 
   onNewChat() {

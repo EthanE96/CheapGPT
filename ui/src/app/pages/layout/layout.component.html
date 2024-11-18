@@ -1,14 +1,43 @@
-<div class="navbar bg-base-100">
-  <div class="flex-none">
-    <app-drawer (chatChange)="onChatChange($event)"></app-drawer>
-  </div>
-  <div class="flex-1">
-    <a class="btn btn-ghost text-xl">CheapGPT</a>
-  </div>
-  <div class="flex-none">
-    <app-modal-settings
-      (modelChange)="onModelChange($event)"
-    ></app-modal-settings>
+<!-- Window -->
+<div class="flex h-full w-full overflow-hidden">
+  <!-- Left Sidebar -->
+  <app-drawer
+    *ngIf="isDrawerOpen"
+    (chatSelectedChange)="onChatSelected($event)"
+    [(isDrawerOpen)]="isDrawerOpen"
+    class="flex flex-shrink-0 overflow-x-hidden max-md:!w-0 w-72"
+  ></app-drawer>
+  <!-- Right Sidebar -->
+  <div class="flex-1 flex flex-col h-screen w-full">
+    <!-- Header -->
+    <div class="navbar">
+      <div class="flex-1">
+        <ng-container *ngIf="!isDrawerOpen">
+          <button class="btn btn-square btn-ghost" (click)="onDrawerChange()">
+            <i-lucide [img]="PanelLeftOpen" class="w-5 h-5"></i-lucide>
+          </button>
+        </ng-container>
+        <a class="btn btn-ghost text-xl">CheapGPT</a>
+      </div>
+      <div>
+        <app-modal-settings
+          (modelChange)="onModelChange($event)"
+        ></app-modal-settings>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="grow">
+      <ng-container *ngIf="selectedChat?.message?.length; else newChat">
+        <app-chat [chat]="selectedChat"></app-chat>
+      </ng-container>
+
+      <ng-template #newChat>
+        <app-new-chat></app-new-chat>
+      </ng-template>
+    </div>
+
+    <!-- Footer -->
+    <div class="min-h-3 text-center text-sm py-2"><p>CheapGPT © 2024</p></div>
   </div>
 </div>
-<app-chat [chat]="chat"></app-chat>
