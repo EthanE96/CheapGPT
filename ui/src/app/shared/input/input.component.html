@@ -1,0 +1,12 @@
+<div class="flex-none flex gap-2 mt-4">
+  <input
+    #input
+    type="text"
+    placeholder="Type here"
+    class="input input-bordered w-full"
+    (keyup.enter)="sendMessage(input.value); input.value = ''"
+  />
+  <button class="btn" (click)="sendMessage(input.value); input.value = ''">
+    Send
+  </button>
+</div>

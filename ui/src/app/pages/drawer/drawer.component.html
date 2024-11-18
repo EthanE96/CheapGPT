@@ -1,0 +1,67 @@
+<div class="flex flex-col h-full w-full p-2 bg-base-200">
+  <div class="flex-none flex flex-row">
+    <div>
+      <button class="btn btn-square btn-ghost" (click)="onDrawerChange()">
+        <i-lucide [img]="PanelLeftClose" class="w-5 h-5"></i-lucide>
+      </button>
+    </div>
+    <div class="grow"></div>
+    <div>
+      <button class="btn btn-square btn-ghost" (click)="onNewChat()">
+        <i-lucide [img]="SquarePlus" class="w-5 h-5"></i-lucide>
+      </button>
+    </div>
+  </div>
+  <div class="flex-grow p-1">
+    <h1 class="text-2xl font-bold p-2 pb-3">Chat History</h1>
+    <ng-container *ngFor="let chat of chats">
+      <ul>
+        <li class="flex items-center">
+          <!-- Chat Title -->
+          <div class="flex-grow">
+            <button
+              (click)="onSelectChat(chat)"
+              class="btn btn-ghost w-full h-full justify-start text-left text-base"
+            >
+              {{ chat.title }}
+            </button>
+          </div>
+
+          <!-- Options Button -->
+          <div class="flex-none">
+            <div class="dropdown dropdown-end">
+              <div
+                tabindex="0"
+                role="button"
+                class="btn btn-ghost btn-squarebtn-sm m-1"
+              >
+                <i-lucide [img]="EllipsisVertical" class="w-4 h-4"></i-lucide>
+              </div>
+              <ul
+                tabindex="0"
+                class="dropdown-content menu bg-base-100 rounded-box z-[1] w-32 p-2 shadow"
+              >
+                <li>
+                  <a (click)="onRenameChat(chat)">
+                    <i-lucide [img]="Pencil" class="w-4 h-4"></i-lucide>Rename
+                  </a>
+                </li>
+                <li>
+                  <a (click)="onDeleteChat(chat)">
+                    <i-lucide [img]="Trash" class="w-4 h-4"></i-lucide>
+                    Delete
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </ng-container>
+  </div>
+  <div class="flex-none px-4 py-2">
+    <button class="btn btn-primary w-full" (click)="onDeleteAllChats()">
+      Clear Chats
+    </button>
+  </div>
+</div>
