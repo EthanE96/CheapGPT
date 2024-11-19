@@ -28,13 +28,7 @@
 
     <!-- Main Content -->
     <div class="grow">
-      <ng-container *ngIf="selectedChat?.message?.length; else newChat">
-        <app-chat [chat]="selectedChat"></app-chat>
-      </ng-container>
-
-      <ng-template #newChat>
-        <app-new-chat></app-new-chat>
-      </ng-template>
+      <app-chat [chat]="selectedChat"></app-chat>
     </div>
 
     <!-- Footer -->

@@ -9,13 +9,13 @@ import { ChatService } from '../../services/chat.service';
   styleUrl: './input.component.scss',
 })
 export class InputComponent {
-  @Output() messageOut = new EventEmitter<string>();
+  @Output() valueOut = new EventEmitter<string>();
 
   constructor(private chatService: ChatService) {}
 
-  async sendMessage(content: string) {
+  async sendValue(content: string) {
     if (content.trim() !== '') {
-      this.messageOut?.emit(content);
+      this.valueOut?.emit(content);
     }
   }
 }

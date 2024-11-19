@@ -27,7 +27,6 @@ export class LayoutComponent {
   @Input() isDrawerOpen: boolean = true;
   @Output() isDrawerOpenChange = new EventEmitter();
   selectedChat?: Chat;
-  newMessage?: string;
 
   onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -42,5 +41,6 @@ export class LayoutComponent {
 
   onChatSelected(chat: Chat) {
     this.selectedChat = chat;
+    console.log(chat); //! REMOVE
   }
 }

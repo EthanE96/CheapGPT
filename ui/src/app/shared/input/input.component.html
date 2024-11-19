@@ -4,9 +4,9 @@
     type="text"
     placeholder="Insert message"
     class="input input-bordered w-full"
-    (keyup.enter)="sendMessage(input.value); input.value = ''"
+    (keyup.enter)="sendValue(input.value); input.value = ''"
   />
-  <button class="btn" (click)="sendMessage(input.value); input.value = ''">
+  <button class="btn" (click)="sendValue(input.value); input.value = ''">
     Send
   </button>
 </div>

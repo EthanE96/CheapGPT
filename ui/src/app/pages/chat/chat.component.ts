@@ -1,56 +1,58 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { Chat, Message } from '../../models/chat';
 import { ChatService } from '../../services/chat.service';
 import { marked } from 'marked';
-import { lastValueFrom, Observable } from 'rxjs';
 import { InputComponent } from '../../shared/input/input.component';
 import { NewChatComponent } from './new-chat/new-chat.component';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, InputComponent, NewChatComponent],
+  imports: [CommonModule, NewChatComponent, InputComponent],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
-  encapsulation: ViewEncapsulation.None,
 })
 export class ChatComponent {
   @Input() chat?: Chat;
-  htmlMessages: Message[] = [];
+  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+  htmlMessages = this.toHTML(this.chat);
 
   constructor(private chatService: ChatService) {}
 
-  async sendMessage(content: string) {
-    console.log(content); //! REMOVE
-
-    if (!this.chat?.message) {
-      this.chat = await lastValueFrom(this.createNewChat());
+  sendMessage(message: string) {
+    if (!this.chat || !this.chat?._id) {
+      throw new Error('Chat not found');
     }
-
-    if (content.trim() !== '' && this.chat?._id) {
-      try {
-        this.chatService
-          .postMessage(this.chat._id, content)
-          .subscribe((chat) => {
-            this.chat = chat;
-            this.toHTML(this.chat);
-          });
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
-    }
+    this.chat.message.push({
+      content: message,
+      isUser: true,
+    });
+    this.scrollToBottom();
+    this.postMessage(this.chat._id, message);
   }
 
-  private createNewChat(): Observable<Chat> {
-    return this.chatService.postChat({
-      model: 'GPT-4',
-      apiKey: 'Test key',
+  private postMessage(id: string, message: string) {
+    this.chatService.postMessage(id, message).subscribe({
+      next: (chat) => {
+        this.chat = chat;
+        this.htmlMessages = this.toHTML(chat);
+        console.log(this.htmlMessages); //! REMOVE
+      },
+      complete: () => {
+        this.scrollToBottom();
+      },
     });
   }
 
-  private toHTML(chat: Chat): Message[] {
-    if (chat.message) {
+  private scrollToBottom() {
+    setTimeout(() => {
+      this.scrollContainer.nativeElement.scrollTop =
+        this.scrollContainer.nativeElement.scrollHeight;
+    }, 100);
+  }
+  private toHTML(chat?: Chat): Message[] {
+    if (chat && chat.message) {
       return chat.message.map((message) => {
         if (!message.isUser) {
           message.content = marked(message.content) as string;

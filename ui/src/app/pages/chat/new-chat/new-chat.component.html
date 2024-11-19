@@ -1,4 +1,4 @@
 <div class="flex flex-col w-1/2 m-auto justify-center" style="height: 90vh">
   <h1 class="text-3xl font-bold mx-auto py-2">How can I help you?</h1>
-  <app-input (messageOut)="newChat($event)"></app-input>
+  <app-input (valueOut)="newMessageOut.emit($event)"></app-input>
 </div>

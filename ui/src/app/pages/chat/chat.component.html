@@ -1,20 +1,7 @@
 <ng-container *ngIf="chat?.message?.length; else newChat">
   <div class="flex flex-col w-1/2 mx-auto" style="height: 90vh">
     <div class="flex-none h-20"></div>
-    <!-- Replace image with picture of the model -->
-    <div class="grow overflow-y-auto">
-      <div class="chat chat-start">
-        <div class="chat-image avatar">
-          <div class="w-10 rounded-full">
-            <img
-              alt="Tailwind CSS chat bubble component"
-              src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-            />
-          </div>
-        </div>
-        <div class="chat-bubble">Hey! What can I do for you?</div>
-      </div>
-
+    <div #scrollContainer class="grow overflow-y-auto scroll-smooth">
       <ng-container *ngIf="chat">
         <div
           *ngFor="let message of chat.message"
@@ -37,16 +24,25 @@
           </ng-container>
 
           <!-- Message -->
-          <div class="chat-bubble" [innerHTML]="message.content"></div>
+          <div
+            class="chat-bubble bg-neutral text-neutral-content"
+            [innerHTML]="message.content"
+          ></div>
           <!-- <div class="chat-footer opacity-50">{{ message.tokens }}</div> -->
+        </div>
+        <!-- Loading Icon -->
+        <div
+          *ngIf="chat.message.slice(-1)[0]?.isUser"
+          class="chat-bubble bg-neutral text-neutral-content"
+        >
+          <span class="loading loading-dots loading-sm"></span>
         </div>
       </ng-container>
     </div>
-    <app-input></app-input>
+    <app-input (valueOut)="sendMessage($event)"></app-input>
   </div>
 </ng-container>
 
 <ng-template #newChat>
-  <app-new-chat (messageOut)="sendMessage($event)"></app-new-chat>
-  ></ng-template
->
+  <app-new-chat (newMessageOut)="sendMessage($event)"></app-new-chat>
+</ng-template>

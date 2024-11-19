@@ -64,12 +64,18 @@ export class DrawerComponent implements OnInit {
     console.log('delete all chats'); //! REMOVE
   }
 
+  onDrawerChange() {
+    this.isDrawerOpen = !this.isDrawerOpen;
+    this.isDrawerOpenChange.emit(this.isDrawerOpen);
+  }
+
   //^ Chat Logic
   newChat() {
     this.chatService
       .postChat({
         model: 'GPT-4',
         apiKey: 'Test key',
+        message: [],
       })
       .pipe(
         tap((chat) => {
@@ -92,10 +98,5 @@ export class DrawerComponent implements OnInit {
       this.newChat();
     }
     this.loadChats();
-  }
-
-  onDrawerChange() {
-    this.isDrawerOpen = !this.isDrawerOpen;
-    this.isDrawerOpenChange.emit(this.isDrawerOpen);
   }
 }
