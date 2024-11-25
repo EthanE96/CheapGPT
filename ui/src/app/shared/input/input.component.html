@@ -6,7 +6,10 @@
     class="input input-bordered w-full"
     (keyup.enter)="sendValue(input.value); input.value = ''"
   />
-  <button class="btn" (click)="sendValue(input.value); input.value = ''">
+  <button
+    class="btn btn-primary"
+    (click)="sendValue(input.value); input.value = ''"
+  >
     Send
   </button>
 </div>

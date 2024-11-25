@@ -4,7 +4,6 @@ import { ModalSettingsComponent } from '../modal-settings/modal-settings.compone
 import { Chat } from '../../models/chat';
 import { DrawerComponent } from '../drawer/drawer.component';
 import { CommonModule } from '@angular/common';
-import { NewChatComponent } from '../chat/new-chat/new-chat.component';
 import { LucideAngularModule, PanelLeftOpen } from 'lucide-angular';
 
 @Component({
@@ -14,7 +13,6 @@ import { LucideAngularModule, PanelLeftOpen } from 'lucide-angular';
     CommonModule,
     LucideAngularModule,
     ChatComponent,
-    NewChatComponent,
     ModalSettingsComponent,
     DrawerComponent,
   ],

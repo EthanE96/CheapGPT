@@ -20,6 +20,12 @@
         </ng-container>
         <a class="btn btn-ghost text-xl">CheapGPT</a>
       </div>
+      <input
+        type="checkbox"
+        class="toggle theme-controller"
+        data-toggle-theme="dark,bumblebee"
+        data-act-class="ACTIVECLASS"
+      />
       <div>
         <app-modal-settings
           (modelChange)="onModelChange($event)"
