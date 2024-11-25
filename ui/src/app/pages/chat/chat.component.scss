@@ -1,5 +1,30 @@
-.chat-bubble {
+.relative {
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  top: -2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+}
+
+::ng-deep .chat-content {
   pre {
-    @apply text-sm bg-slate-950 text-white p-2 my-4 mx-2 whitespace-pre-wrap rounded-md;
+    @apply bg-base-300;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
+
+  code {
+    @apply text-base-content;
+  }
+}
+
+::ng-deep .chat-content code:not(pre code) {
+  @apply text-neutral-content;
+  @apply italic;
 }

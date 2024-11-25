@@ -5,6 +5,7 @@
     *ngIf="isDrawerOpen"
     (chatSelectedChange)="onChatSelected($event)"
     [(isDrawerOpen)]="isDrawerOpen"
+    [(newMessage)]="newMessage"
     class="flex flex-shrink-0 overflow-x-hidden max-md:!w-0 w-72"
   ></app-drawer>
   <!-- Right Sidebar -->
@@ -28,10 +29,10 @@
 
     <!-- Main Content -->
     <div class="grow">
-      <app-chat [chat]="selectedChat"></app-chat>
+      <app-chat [chat]="selectedChat" (newMessage)="onNewMessage()"></app-chat>
     </div>
 
     <!-- Footer -->
-    <div class="min-h-3 text-center text-sm py-2"><p>CheapGPT © 2024</p></div>
+    <div class="min-h-3 text-center text-sm pb-2"><p>CheapGPT © 2024</p></div>
   </div>
 </div>

@@ -26,7 +26,12 @@ export class LayoutComponent {
 
   @Input() isDrawerOpen: boolean = true;
   @Output() isDrawerOpenChange = new EventEmitter();
-  selectedChat?: Chat;
+  selectedChat: Chat = {
+    model: 'GPT-4',
+    apiKey: 'Test key',
+    message: [],
+  };
+  newMessage: boolean = false;
 
   onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -35,12 +40,15 @@ export class LayoutComponent {
 
   onModelChange(model: unknown) {
     if (model) {
-      console.log('model change');
+      console.log('model change'); //! REMOVE
     }
   }
 
   onChatSelected(chat: Chat) {
     this.selectedChat = chat;
-    console.log(chat); //! REMOVE
+  }
+
+  onNewMessage() {
+    this.newMessage = true;
   }
 }

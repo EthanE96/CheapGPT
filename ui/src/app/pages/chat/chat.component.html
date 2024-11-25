@@ -1,5 +1,5 @@
 <ng-container *ngIf="chat?.message?.length; else newChat">
-  <div class="flex flex-col w-1/2 mx-auto" style="height: 90vh">
+  <div class="flex flex-col w-2/3 mx-auto" style="height: 90vh">
     <div class="flex-none h-20"></div>
     <div #scrollContainer class="grow overflow-y-auto scroll-smooth">
       <ng-container *ngIf="chat">
@@ -25,8 +25,8 @@
 
           <!-- Message -->
           <div
-            class="chat-bubble bg-neutral text-neutral-content"
-            [innerHTML]="message.content"
+            class="chat-content chat-bubble bg-neutral text-neutral-content"
+            [innerHTML]="toHTML(message.content)"
           ></div>
           <!-- <div class="chat-footer opacity-50">{{ message.tokens }}</div> -->
         </div>
@@ -39,10 +39,17 @@
         </div>
       </ng-container>
     </div>
-    <app-input (valueOut)="sendMessage($event)"></app-input>
+    <div class="relative">
+      <app-input (valueOut)="sendMessage($event)"></app-input>
+      <span class="overlay">
+        <div class="btn btn-sm btn-circle" (click)="scrollToBottom()">
+          <i-lucide [img]="ArrowDown" class="w-4 h-4"></i-lucide>
+        </div>
+      </span>
+    </div>
   </div>
 </ng-container>
 
 <ng-template #newChat>
-  <app-new-chat (newMessageOut)="sendMessage($event)"></app-new-chat>
+  <app-new-chat (newMessageOut)="sendMessage($event, true)"></app-new-chat>
 </ng-template>

@@ -19,42 +19,59 @@
         <li class="flex items-center">
           <!-- Chat Title -->
           <div class="flex-grow">
-            <button
-              (click)="onSelectChat(chat)"
-              class="btn btn-ghost w-full h-full justify-start text-left text-base"
-            >
-              {{ chat.title }}
-            </button>
+            <ng-container *ngIf="editingChat === chat; else viewMode">
+              <!-- Input for Editing -->
+              <input
+                type="text"
+                #chatInput
+                [value]="editingValue"
+                (keydown.enter)="onSaveEdit(chat, chatInput.value)"
+                (keydown.escape)="onCancelEdit()"
+                [placeholder]="chat.title"
+                class="input input-bordered w-full"
+              />
+            </ng-container>
+            <ng-template #viewMode>
+              <!-- Display Chat Title -->
+              <button
+                (click)="onSelectChat(chat)"
+                class="btn btn-ghost w-full h-full justify-start text-left text-base"
+              >
+                {{ chat.title }}
+              </button>
+            </ng-template>
           </div>
 
           <!-- Options Button -->
-          <div class="flex-none">
-            <div class="dropdown dropdown-end">
-              <div
-                tabindex="0"
-                role="button"
-                class="btn btn-ghost btn-squarebtn-sm m-1"
-              >
-                <i-lucide [img]="EllipsisVertical" class="w-4 h-4"></i-lucide>
+          <ng-container *ngIf="!isEditing">
+            <div class="flex-none">
+              <div class="dropdown dropdown-end">
+                <div
+                  tabindex="0"
+                  role="button"
+                  class="btn btn-ghost btn-squarebtn-sm m-1"
+                >
+                  <i-lucide [img]="EllipsisVertical" class="w-4 h-4"></i-lucide>
+                </div>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content menu bg-base-100 rounded-box z-[1] w-32 p-2 shadow"
+                >
+                  <li>
+                    <a (click)="onToggleEdit(chat)">
+                      <i-lucide [img]="Pencil" class="w-4 h-4"></i-lucide>Rename
+                    </a>
+                  </li>
+                  <li>
+                    <a (click)="onDeleteChat(chat)">
+                      <i-lucide [img]="Trash" class="w-4 h-4"></i-lucide>
+                      Delete
+                    </a>
+                  </li>
+                </ul>
               </div>
-              <ul
-                tabindex="0"
-                class="dropdown-content menu bg-base-100 rounded-box z-[1] w-32 p-2 shadow"
-              >
-                <li>
-                  <a (click)="onRenameChat(chat)">
-                    <i-lucide [img]="Pencil" class="w-4 h-4"></i-lucide>Rename
-                  </a>
-                </li>
-                <li>
-                  <a (click)="onDeleteChat(chat)">
-                    <i-lucide [img]="Trash" class="w-4 h-4"></i-lucide>
-                    Delete
-                  </a>
-                </li>
-              </ul>
             </div>
-          </div>
+          </ng-container>
         </li>
       </ul>
     </ng-container>
