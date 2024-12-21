@@ -1,5 +1,13 @@
 import { Request, Response } from "express";
-import { createChat, fetchChats, fetchChat, removeChat, createMessage, removeChats, updateChat } from "../services/chatService";
+import {
+  createChat,
+  fetchChats,
+  fetchChat,
+  removeChat,
+  createMessage,
+  removeChats,
+  updateChat,
+} from "../services/chatService";
 
 //^ Post Chat
 export const postChat = async (req: Request, res: Response) => {
@@ -30,7 +38,6 @@ export const getChats = async (req: Request, res: Response) => {
 export const getChat = async (req: Request, res: Response) => {
   try {
     const chat = await fetchChat(req.params.id);
-    console.log(req.params.id);
     if (!chat) {
       res.status(404).json({ error: "Chat not found" });
       return;

@@ -1,4 +1,17 @@
-TODO:
+# How to Run
 
-1. AI Title Creation
-2. Model Changes
+## Development
+
+### API
+
+```bash
+  cd /api
+  npm run watch
+```
+
+### UI
+
+```bash
+  cd /ui
+  npm run watch
+```

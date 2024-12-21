@@ -1,6 +1,6 @@
 export interface Chat {
   _id?: string;
-  message?: Message[];
+  message: Message[];
   model: string;
   apiKey: string;
   title?: string;

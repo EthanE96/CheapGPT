@@ -1,60 +1,67 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { LayoutComponent } from '../layout/layout.component';
-import { Chat, Message } from '../../models/chat';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { Chat } from '../../models/chat';
 import { ChatService } from '../../services/chat.service';
 import { marked } from 'marked';
-import { lastValueFrom, Observable } from 'rxjs';
+import { InputComponent } from '../../shared/input/input.component';
+import { NewChatComponent } from './new-chat/new-chat.component';
+import { LucideAngularModule, ArrowDown } from 'lucide-angular';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [CommonModule, LayoutComponent],
+  imports: [
+    CommonModule,
+    NewChatComponent,
+    InputComponent,
+    LucideAngularModule,
+  ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss',
-  encapsulation: ViewEncapsulation.None,
 })
 export class ChatComponent {
+  readonly ArrowDown = ArrowDown;
   @Input() chat?: Chat;
-  htmlMessages: Message[] = [];
+  @Output() newMessage = new EventEmitter<void>();
+  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   constructor(private chatService: ChatService) {}
 
-  async sendMessage(content: string) {
-    if (!this.chat?.message) {
-      this.chat = await lastValueFrom(this.createNewChat());
+  sendMessage(message: string, newMessage?: boolean) {
+    if (!this.chat || !this.chat?._id) {
+      throw new Error('Chat not found');
     }
+    this.chat.message.push({
+      content: message,
+      isUser: true,
+    });
+    this.scrollToBottom();
 
-    if (content.trim() !== '' && this.chat?._id) {
-      try {
-        this.chatService
-          .postMessage(this.chat._id, content)
-          .subscribe((chat) => {
-            this.chat = chat;
-            this.toHTML(this.chat);
-          });
-      } catch (error) {
-        console.error('Error sending message:', error);
+    this.chatService.postMessage(this.chat._id, message).subscribe((chat) => {
+      this.chat = chat;
+      //refreshes the drawer chats (bc new title)
+      if (newMessage) {
+        this.newMessage.emit();
       }
-    }
-  }
-
-  private createNewChat(): Observable<Chat> {
-    return this.chatService.postChat({
-      model: 'GPT-4',
-      apiKey: 'Test key',
+      this.scrollToBottom();
     });
   }
 
-  private toHTML(chat: Chat): Message[] {
-    if (chat.message) {
-      return chat.message.map((message) => {
-        if (!message.isUser) {
-          message.content = marked(message.content) as string;
-        }
-        return message;
-      });
-    }
-    return [];
+  toHTML(message: string) {
+    return marked(message);
+  }
+
+  scrollToBottom() {
+    setTimeout(() => {
+      this.scrollContainer.nativeElement.scrollTop =
+        this.scrollContainer.nativeElement.scrollHeight;
+    }, 100);
   }
 }
