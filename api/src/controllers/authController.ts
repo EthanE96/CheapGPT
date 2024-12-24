@@ -2,7 +2,8 @@ import { Request, Response } from "express";
 
 export const googleCallback = (req: Request, res: Response) => {
   try {
-    res.redirect("/api/dashboard");
+    res.header("Access-Control-Allow-Origin", "http://localhost:4200"); //TODO: Angular URL
+    res.header("Access-Control-Allow-Credentials", "true");
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }

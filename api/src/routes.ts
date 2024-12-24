@@ -18,6 +18,8 @@ import { isAuthenticated } from "./middleware/authMiddleware";
 
 const router = Router();
 
+// TODO: Add auth middleware to routes
+
 //^ Public routes
 // /api/health
 router.get("/health", (req: Request, res: Response) => {
@@ -30,15 +32,16 @@ router.get("/health", (req: Request, res: Response) => {
 
 //^ Private routes
 //* Chat
-router.post("/chats", postChat);
+router.post("/chats", isAuthenticated, postChat);
 router.get("/chats", isAuthenticated, getChats);
-router.get("/chats/:id", getChat);
-router.patch("/chats/:id", patchChat);
-router.delete("/chats/:id", deleteChat);
-router.delete("/chats", deleteChats);
-router.post("/chats/:id/messages", postMessage);
+router.get("/chats/:id", isAuthenticated, getChat);
+router.patch("/chats/:id", isAuthenticated, patchChat);
+router.delete("/chats/:id", isAuthenticated, deleteChat);
+router.delete("/chats", isAuthenticated, deleteChats);
+router.post("/chats/:id/messages", isAuthenticated, postMessage);
 
 //* Authentication
+router.get("/auth/verify", isAuthenticated);
 router.get(
   "/auth/google",
   passport.authenticate("google", {
@@ -48,8 +51,9 @@ router.get(
 router.get(
   "/auth/callback/google",
   passport.authenticate("google", {
-    failureRedirect: "/",
+    failureRedirect: "/login",
     failureMessage: true,
+    successRedirect: "/",
   }),
   googleCallback
 );
