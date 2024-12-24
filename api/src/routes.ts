@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { Request, Response } from "express";
+import { Router, Request, Response } from "express";
+import passport from "passport";
 import {
   deleteChat,
   deleteChats,
@@ -10,11 +10,11 @@ import {
   patchChat,
 } from "./controllers/chatController";
 import {
-  loginGoogle,
-  loginGoogleCallback,
-  loginPage,
-  logout,
+  googleCallback,
+  googleLogout,
+  googleDashboard,
 } from "./controllers/authController";
+import { isAuthenticated } from "./middleware/authMiddleware";
 
 const router = Router();
 
@@ -30,9 +30,8 @@ router.get("/health", (req: Request, res: Response) => {
 
 //^ Private routes
 //* Chat
-// /api/chat
 router.post("/chats", postChat);
-router.get("/chats", getChats);
+router.get("/chats", isAuthenticated, getChats);
 router.get("/chats/:id", getChat);
 router.patch("/chats/:id", patchChat);
 router.delete("/chats/:id", deleteChat);
@@ -40,10 +39,21 @@ router.delete("/chats", deleteChats);
 router.post("/chats/:id/messages", postMessage);
 
 //* Authentication
-// /api/auth
-router.get("/login", loginPage);
-router.get("/login/federated/google", loginGoogle);
-router.get("/oauth2/redirect/google", loginGoogleCallback);
-router.post("/logout", logout);
+router.get(
+  "/auth/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  })
+);
+router.get(
+  "/auth/callback/google",
+  passport.authenticate("google", {
+    failureRedirect: "/",
+    failureMessage: true,
+  }),
+  googleCallback
+);
+router.get("/auth/logout", googleLogout);
+router.get("/dashboard", googleDashboard);
 
 export default router;

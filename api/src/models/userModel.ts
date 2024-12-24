@@ -1,27 +1,43 @@
 import mongoose, { Schema } from "mongoose";
+import { Profile } from "passport";
 
-interface IFederatedCredential {
-  provider: string;
-  subject: string;
+export interface User extends Profile {
+  // Additional fields
+  _id?: string;
+  createdAt: Date;
+  updatedAt?: Date;
 }
 
-export interface IUser extends Document {
-  name: string;
-  federated: IFederatedCredential[];
-}
-
-const userSchema = new Schema<IUser>(
+const UserSchema = new Schema<User>(
   {
-    name: { type: String, required: true },
-    federated: [
+    // Passport normalized user profile fields https://www.passportjs.org/reference/normalized-profile/
+    provider: { type: String, required: true },
+    id: { type: String, required: true },
+    displayName: { type: String, required: true },
+    username: { type: String },
+    name: {
+      familyName: { type: String, required: false },
+      givenName: { type: String, required: false },
+      middleName: { type: String, required: false },
+    },
+    emails: [
       {
-        provider: { type: String, required: true },
-        subject: { type: String, required: true },
+        value: { type: String, required: false },
+        type: { type: String },
+      },
+    ],
+    photos: [
+      {
+        value: { type: String, required: false },
       },
     ],
   },
-  { timestamps: true }
+  {
+    timestamps: true, // Automatically handle `createdAt` and `updatedAt` fields
+  }
 );
 
-userSchema.index({ "federated.provider": 1, "federated.subject": 1 });
-export const User = mongoose.model<IUser>("User", userSchema);
+// Create a compound unique index on provider and id
+UserSchema.index({ provider: 1, id: 1 }, { unique: true });
+
+export const User = mongoose.model<User>("User", UserSchema);

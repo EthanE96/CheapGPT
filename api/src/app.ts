@@ -1,46 +1,43 @@
-import express, { Application, Request } from "express";
+import express, { Request } from "express";
 import cors from "cors";
-import { json, urlencoded } from "body-parser";
-import { connectDB } from "./config/db";
-import routes from "./routes";
-import morgan from "morgan";
 import session from "express-session";
+import morgan from "morgan";
 import passport from "passport";
-import "./config/passport";
 
-const app: Application = express();
+import { connectDB } from "./config/dbConfig";
+import routes from "./routes";
+import { passportConfig } from "./config/passportConfig";
+
+const app = express();
 
 // Connect to MongoDB
 connectDB();
 
+// Allows ui to make requests api from dif domains
 app.use(cors());
-app.use(json());
-app.use(urlencoded({ extended: true }));
 
-// Session configuration
+// Session Management
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "your-secret-key",
+    secret: process.env.SESSION_SECRET || "your_secret_key",
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      // TODO: will need to update
-      secure: process.env.NODE_ENV === "development",
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
+    cookie: { httpOnly: true, secure: false }, //TODO: Change to true in production with HTTPS
   })
 );
 
-// Initialize Passport
+// Initialize Passport and use it with the session
+passportConfig();
 app.use(passport.initialize());
 app.use(passport.session());
 
-//morgan middleware
+//Morgan logger
 morgan.token("body", (req: Request) => {
   return JSON.stringify(req.body);
 });
 app.use(morgan(":method :url :status - :response-time ms body:body"));
 
+// Routes
 app.use("/api", routes);
 
 export default app;

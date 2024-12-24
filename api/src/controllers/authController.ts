@@ -1,47 +1,28 @@
-import { Request, Response, NextFunction, Router } from "express";
-import passport from "passport";
+import { Request, Response } from "express";
 
-const router = Router();
-
-//TODO: THIS MIGHT Exist as var ensureLoggedIn = ensureLogIn();
-// Custom middleware to check authentication
-export const isAuthenticated = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  if (req.isAuthenticated()) {
-    return next();
+export const googleCallback = (req: Request, res: Response) => {
+  try {
+    res.redirect("/api/dashboard");
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
   }
-  res.redirect("/login");
 };
 
-// Login page
-export const loginPage = (req: Request, res: Response) => {
-  res.render("login");
-};
-
-// Initiate Google OAuth flow
-export const loginGoogle = () => {
-  passport.authenticate("google");
-};
-
-// Google OAuth callback
-export const loginGoogleCallback = () => {
-  passport.authenticate("google", {
-    successReturnToOrRedirect: "/",
-    failureRedirect: "/login",
-  });
-};
-
-// Logout
-export const logout = (req: Request, res: Response, next: NextFunction) => {
+export const googleLogout = (req: Request, res: Response) => {
   req.logout((err) => {
     if (err) {
-      return next(err);
+      return res.status(500).json({ message: "Logout failed", error: err });
     }
-    res.redirect("/");
+    res.redirect("/api/dashboard");
   });
 };
 
-export default router;
+export const googleDashboard = (req: Request, res: Response) => {
+  if (req.isAuthenticated()) {
+    res.send(
+      "<div>You are logged in</div><a href='/api/auth/logout'>Logout</a>"
+    );
+  } else {
+    res.send("You are not logged in");
+  }
+};

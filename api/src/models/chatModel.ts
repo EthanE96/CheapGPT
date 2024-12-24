@@ -23,7 +23,7 @@ export interface Tokens {
   completionTokens: number;
 }
 
-const chatSchema = new Schema({
+const chatSchema = new Schema<Chat>({
   message: [
     {
       content: { type: String, required: true },
