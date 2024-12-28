@@ -8,7 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
-import { Chat } from '../../models/chat';
+import { Chat } from '../../models/chat.model';
 import { CommonModule } from '@angular/common';
 import {
   LucideAngularModule,

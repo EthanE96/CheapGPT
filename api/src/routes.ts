@@ -10,9 +10,9 @@ import {
   patchChat,
 } from "./controllers/chatController";
 import {
-  googleCallback,
-  googleLogout,
-  googleDashboard,
+  authCallback,
+  authLogout,
+  checkAuthStatus,
 } from "./controllers/authController";
 import { isAuthenticated } from "./middleware/authMiddleware";
 
@@ -41,7 +41,10 @@ router.delete("/chats", isAuthenticated, deleteChats);
 router.post("/chats/:id/messages", isAuthenticated, postMessage);
 
 //* Authentication
-router.get("/auth/verify", isAuthenticated);
+router.get("/auth/status", checkAuthStatus);
+router.get("/auth/logout", authLogout);
+
+// Google
 router.get(
   "/auth/google",
   passport.authenticate("google", {
@@ -53,11 +56,9 @@ router.get(
   passport.authenticate("google", {
     failureRedirect: "/login",
     failureMessage: true,
-    successRedirect: "/",
+    successRedirect: "http://localhost:4200/",
   }),
-  googleCallback
+  authCallback
 );
-router.get("/auth/logout", googleLogout);
-router.get("/dashboard", googleDashboard);
 
 export default router;

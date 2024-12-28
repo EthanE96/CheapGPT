@@ -13,6 +13,6 @@ export class LoginComponent {
   constructor(private authService: AuthService) {}
 
   loginWithGoogle() {
-    this.authService.googleLogin().subscribe();
+    this.authService.loginWithGoogle();
   }
 }

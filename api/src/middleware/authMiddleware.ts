@@ -9,6 +9,9 @@ export function isAuthenticated(
   if (req.isAuthenticated()) {
     return next();
   } else {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({
+      authenticated: false,
+      message: "Not authenticated",
+    });
   }
 }

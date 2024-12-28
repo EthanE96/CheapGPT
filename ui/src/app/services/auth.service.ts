@@ -1,43 +1,75 @@
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpResponse,
-} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.dev';
-import { map, Observable, throwError } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
+import { User } from '../models/user.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
-  baseURL = environment.apiUrl;
+  private baseURL = environment.apiUrl;
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  currentUser$ = this.currentUserSubject.asObservable();
 
-  isAuthenticated(): Observable<number> {
-    return (
-      this.http
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .get<HttpResponse<any>>(`${this.baseURL}/auth/verify`, {
-          observe: 'response',
-        })
-        .pipe(map((response) => response.status))
-    );
+  constructor(private http: HttpClient, private router: Router) {
+    this.checkAuthStatus();
   }
 
-  googleLogin() {
-    return this.http.get(`${this.baseURL}/auth/google`, {
-      withCredentials: true,
-    });
+  //  Updates the currentUserSubject and redirects to the home page
+  checkAuthStatus(): void {
+    this.http
+      .get<{ authenticated: boolean; user: User }>(
+        `${this.baseURL}/auth/status`,
+        { withCredentials: true }
+      )
+      .subscribe({
+        next: (response) => {
+          if (response.authenticated) {
+            // Update the currentUserSubject
+            this.currentUserSubject.next(response.user);
+
+            // Redirect to the home page if not already (should already)
+            if (this.router.url === '/login') {
+              this.router.navigate(['/']);
+            }
+          } else {
+            this.handleUnauthenticated();
+          }
+        },
+        error: () => {
+          this.handleUnauthenticated();
+        },
+      });
   }
 
-  logout() {
-    return this.http.get(`${this.baseURL}/auth/logout`);
+  // Redirects to the google login page
+  loginWithGoogle(): void {
+    window.location.href = `${this.baseURL}/auth/google`;
   }
 
-  //* Error Handling
-  // sends through the http response error
-  private handleError(error: HttpErrorResponse) {
-    return throwError(() => error.error);
+  // Logs the user out
+  logout(): void {
+    this.http
+      .get(`${this.baseURL}/auth/logout`, { withCredentials: true })
+      .subscribe(() => {
+        this.handleUnauthenticated();
+      });
+  }
+
+  // Updates the currentUserSubject and redirects to the login page
+  handleUnauthenticated(): void {
+    // Update the currentUserSubject
+    this.currentUserSubject.next(null);
+    // Redirect to the login page
+    if (this.router.url !== '/login') {
+      this.router.navigate(['/login']);
+    }
+  }
+
+  // Checks if the user is authenticated
+  isAuthenticated(): boolean {
+    return !!this.currentUserSubject.value;
   }
 }

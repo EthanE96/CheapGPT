@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Chat } from '../models/chat';
+import { Chat } from '../models/chat.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment.dev';
 import { catchError, Observable, throwError } from 'rxjs';
