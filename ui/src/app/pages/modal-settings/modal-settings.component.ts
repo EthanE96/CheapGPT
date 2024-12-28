@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-settings',
@@ -10,14 +11,21 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class ModalSettingsComponent {
   @Output() modelChange = new EventEmitter();
 
+  constructor(private router: Router) {}
+
   model = {
     key: '',
     model: '',
   };
 
-  save(key: string, model: string) {
+  onSave(key: string, model: string) {
     this.model.key = key;
     this.model.model = model;
     this.modelChange.emit(this.model);
+  }
+
+  onLogout() {
+    this.modelChange.emit(null);
+    this.router.navigate(['/logout']);
   }
 }

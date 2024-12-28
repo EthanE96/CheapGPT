@@ -56,7 +56,7 @@ export class AuthService {
     this.http
       .get(`${this.baseURL}/auth/logout`, { withCredentials: true })
       .subscribe(() => {
-        this.handleUnauthenticated();
+        this.currentUserSubject.next(null);
       });
   }
 

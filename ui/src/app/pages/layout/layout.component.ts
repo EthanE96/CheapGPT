@@ -36,12 +36,7 @@ export class LayoutComponent {
 
   constructor() {}
 
-  /*************  ✨ Codeium Command ⭐  *************/
-  /**
-   * Toggle the drawer open or closed.
-   * Emits the new value of isDrawerOpen via isDrawerOpenChange.
-   */
-  /******  114fe337-3be4-4ada-a141-1cabc05a12a3  *******/ onDrawerChange() {
+  onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;
     this.isDrawerOpenChange.emit(this.isDrawerOpen);
   }

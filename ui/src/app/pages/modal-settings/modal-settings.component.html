@@ -47,11 +47,19 @@
             <button
               class="btn btn-primary w-full mx-auto"
               (click)="
-                save(model.value, key.value); model.value = ''; key.value = ''
+                onSave(model.value, key.value); model.value = ''; key.value = ''
               "
             >
               Save
             </button>
+            <div class="modal-action flex-none">
+              <button
+                class="btn btn-primary w-full mx-auto"
+                (click)="onLogout()"
+              >
+                Logout
+              </button>
+            </div>
           </form>
         </div>
       </div>
