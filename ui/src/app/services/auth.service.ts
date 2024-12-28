@@ -13,35 +13,37 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {
-    this.checkAuthStatus();
-  }
+  constructor(private http: HttpClient, private router: Router) {}
 
   //  Updates the currentUserSubject and redirects to the home page
-  checkAuthStatus(): void {
-    this.http
-      .get<{ authenticated: boolean; user: User }>(
-        `${this.baseURL}/auth/status`,
-        { withCredentials: true }
-      )
-      .subscribe({
-        next: (response) => {
-          if (response.authenticated) {
-            // Update the currentUserSubject
-            this.currentUserSubject.next(response.user);
-
-            // Redirect to the home page if not already (should already)
-            if (this.router.url === '/login') {
-              this.router.navigate(['/']);
+  checkAuthStatus(): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.http
+        .get<{ authenticated: boolean; user: User }>(
+          `${this.baseURL}/auth/status`,
+          { withCredentials: true }
+        )
+        .subscribe({
+          next: (response) => {
+            if (response.authenticated) {
+              // Update the currentUserSubject
+              this.currentUserSubject.next(response.user);
+              // Redirect to the home page if not already (should already)
+              if (this.router.url === '/login') {
+                this.router.navigate(['/']);
+              }
+              resolve();
+            } else {
+              this.handleUnauthenticated();
+              resolve();
             }
-          } else {
+          },
+          error: () => {
             this.handleUnauthenticated();
-          }
-        },
-        error: () => {
-          this.handleUnauthenticated();
-        },
-      });
+            resolve();
+          },
+        });
+    });
   }
 
   // Redirects to the google login page

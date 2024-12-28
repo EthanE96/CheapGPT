@@ -1,12 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
 import { ModalSettingsComponent } from '../modal-settings/modal-settings.component';
 import { Chat } from '../../models/chat.model';
 import { DrawerComponent } from '../drawer/drawer.component';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, PanelLeftOpen } from 'lucide-angular';
-import { AuthService } from '../../services/auth.service';
+
 import { User } from '../../models/user.model';
 
 @Component({
@@ -22,7 +21,7 @@ import { User } from '../../models/user.model';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent {
   readonly PanelLeftOpen = PanelLeftOpen;
   @Input() isDrawerOpen: boolean = true;
   @Output() isDrawerOpenChange = new EventEmitter();
@@ -35,17 +34,14 @@ export class LayoutComponent implements OnInit {
   };
   newMessage: boolean = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this.authService.currentUser$.subscribe((user) => {
-      if (!user) {
-        this.router.navigate(['/login']);
-      }
-    });
-  }
-
-  onDrawerChange() {
+  /*************  ✨ Codeium Command ⭐  *************/
+  /**
+   * Toggle the drawer open or closed.
+   * Emits the new value of isDrawerOpen via isDrawerOpenChange.
+   */
+  /******  114fe337-3be4-4ada-a141-1cabc05a12a3  *******/ onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;
     this.isDrawerOpenChange.emit(this.isDrawerOpen);
   }
