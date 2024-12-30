@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { themeChange } from 'theme-change';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +10,4 @@ import { themeChange } from 'theme-change';
 })
 export class AppComponent {
   title = 'CheapGPT';
-
-  constructor() {
-    themeChange();
-  }
 }
