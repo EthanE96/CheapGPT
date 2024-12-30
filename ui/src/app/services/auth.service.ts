@@ -51,6 +51,11 @@ export class AuthService {
     window.location.href = `${this.baseURL}/auth/google`;
   }
 
+  // Redirects to the github login page
+  loginWithGithub(): void {
+    window.location.href = `${this.baseURL}/auth/github`;
+  }
+
   // Logs the user out
   logout(): void {
     this.http

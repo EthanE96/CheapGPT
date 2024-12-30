@@ -7,10 +7,14 @@
     <div class="card-body">
       <h2 class="card-title text-2xl">Create an Account</h2>
 
-      <div class="flex flex-col gap-5 py-3">
-        <button class="btn">
+      <div class="flex flex-col gap-4 py-3">
+        <button class="btn" (click)="signupWithGoogle()">
           <img class="w-5 h-5" src="/google_logo.png" alt="Google Logo" />
           Sign up with Google
+        </button>
+        <button class="btn" (click)="signupWithGitHub()">
+          <img class="w-5 h-5" src="/github_logo.svg" alt="GitHub Logo" />
+          Sign up with GitHub
         </button>
       </div>
 

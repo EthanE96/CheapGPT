@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -8,4 +9,13 @@ import { RouterLink } from '@angular/router';
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss',
 })
-export class SignupComponent {}
+export class SignupComponent {
+  constructor(private authService: AuthService) {}
+
+  signupWithGoogle() {
+    this.authService.loginWithGoogle();
+  }
+  signupWithGitHub() {
+    this.authService.loginWithGithub();
+  }
+}
