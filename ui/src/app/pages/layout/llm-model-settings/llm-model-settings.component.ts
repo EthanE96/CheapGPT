@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-modal-settings',
+  selector: 'app-llm-model-settings',
   standalone: true,
   imports: [],
-  templateUrl: './modal-settings.component.html',
-  styleUrl: './modal-settings.component.scss',
+  templateUrl: './llm-model-settings.component.html',
+  styleUrl: './llm-model-settings.component.scss',
 })
-export class ModalSettingsComponent {
+export class LlmModelSettingsComponent {
   @Output() modelChange = new EventEmitter();
 
   model = {
@@ -15,7 +15,7 @@ export class ModalSettingsComponent {
     model: '',
   };
 
-  save(key: string, model: string) {
+  onSave(key: string, model: string) {
     this.model.key = key;
     this.model.model = model;
     this.modelChange.emit(this.model);

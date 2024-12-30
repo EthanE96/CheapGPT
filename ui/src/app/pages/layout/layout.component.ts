@@ -1,10 +1,18 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
-import { ModalSettingsComponent } from '../modal-settings/modal-settings.component';
-import { Chat } from '../../models/chat';
+import { Chat } from '../../models/chat.model';
 import { DrawerComponent } from '../drawer/drawer.component';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, PanelLeftOpen } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  PanelLeftOpen,
+  Settings,
+  Sun,
+  Moon,
+} from 'lucide-angular';
+import { Router } from '@angular/router';
+import { LlmModelSettingsComponent } from './llm-model-settings/llm-model-settings.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -13,7 +21,7 @@ import { LucideAngularModule, PanelLeftOpen } from 'lucide-angular';
     CommonModule,
     LucideAngularModule,
     ChatComponent,
-    ModalSettingsComponent,
+    LlmModelSettingsComponent,
     DrawerComponent,
   ],
   templateUrl: './layout.component.html',
@@ -21,15 +29,22 @@ import { LucideAngularModule, PanelLeftOpen } from 'lucide-angular';
 })
 export class LayoutComponent {
   readonly PanelLeftOpen = PanelLeftOpen;
+  readonly Settings = Settings;
+  readonly Sun = Sun;
+  readonly Moon = Moon;
 
   @Input() isDrawerOpen: boolean = true;
   @Output() isDrawerOpenChange = new EventEmitter();
+
+  currentUser$ = this.authService.currentUser$;
   selectedChat: Chat = {
     model: 'GPT-4',
     apiKey: 'Test key',
     message: [],
   };
   newMessage: boolean = false;
+
+  constructor(private router: Router, private authService: AuthService) {}
 
   onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -48,5 +63,9 @@ export class LayoutComponent {
 
   onNewMessage() {
     this.newMessage = true;
+  }
+
+  onLogout() {
+    this.router.navigate(['/logout']);
   }
 }

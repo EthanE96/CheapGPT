@@ -7,7 +7,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Chat } from '../../models/chat';
+import { Chat } from '../../models/chat.model';
 import { ChatService } from '../../services/chat.service';
 import { marked } from 'marked';
 import { InputComponent } from '../../shared/input/input.component';

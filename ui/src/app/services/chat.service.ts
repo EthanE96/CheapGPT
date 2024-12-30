@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Chat } from '../models/chat';
+import { Chat } from '../models/chat.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment.dev';
 import { catchError, Observable, throwError } from 'rxjs';
@@ -15,42 +15,46 @@ export class ChatService {
   //^ Get Chats
   getChats(): Observable<Chat[]> {
     return this.http
-      .get<Chat[]>(`${this.baseURL}/chats`)
+      .get<Chat[]>(`${this.baseURL}/chats`, { withCredentials: true })
       .pipe(catchError(this.handleError));
   }
 
   //^ Get Chat
   getChat(chatId: string): Observable<Chat> {
     return this.http
-      .get<Chat>(`${this.baseURL}/chats/${chatId}`)
+      .get<Chat>(`${this.baseURL}/chats/${chatId}`, { withCredentials: true })
       .pipe(catchError(this.handleError));
   }
 
   //^ Create Chat
   postChat(chat: Chat): Observable<Chat> {
     return this.http
-      .post<Chat>(`${this.baseURL}/chats`, chat)
+      .post<Chat>(`${this.baseURL}/chats`, chat, { withCredentials: true })
       .pipe(catchError(this.handleError));
   }
 
   //^ Edit Chat
   patchChat(chat: Chat): Observable<Chat> {
     return this.http
-      .patch<Chat>(`${this.baseURL}/chats/${chat._id}`, chat)
+      .patch<Chat>(`${this.baseURL}/chats/${chat._id}`, chat, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.handleError));
   }
 
   //^ Delete Chat
   deleteChat(chatId: string): Observable<Chat> {
     return this.http
-      .delete<Chat>(`${this.baseURL}/chats/${chatId}`)
+      .delete<Chat>(`${this.baseURL}/chats/${chatId}`, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.handleError));
   }
 
   //^ Delete All Chats
   deleteChats(): Observable<number> {
     return this.http
-      .delete<number>(`${this.baseURL}/chats`)
+      .delete<number>(`${this.baseURL}/chats`, { withCredentials: true })
       .pipe(catchError(this.handleError));
   }
 
@@ -68,13 +72,15 @@ export class ChatService {
     };
 
     return this.http
-      .post<Chat>(`${this.baseURL}/chats/${chatId}/messages`, requestBody)
+      .post<Chat>(`${this.baseURL}/chats/${chatId}/messages`, requestBody, {
+        withCredentials: true,
+      })
       .pipe(catchError(this.handleError));
   }
 
   //* Error Handling
   // sends through the http response error
   private handleError(error: HttpErrorResponse) {
-    return throwError(() => error.error);
+    return throwError(() => error);
   }
 }
