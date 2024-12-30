@@ -61,4 +61,19 @@ router.get(
   authCallback
 );
 
+// Github
+router.get(
+  "/auth/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
+router.get(
+  "/auth/callback/github",
+  passport.authenticate("github", {
+    failureRedirect: "/login",
+    failureMessage: true,
+    successRedirect: process.env.CLIENT_URL || "http://localhost:4200/",
+  }),
+  authCallback
+);
+
 export default router;

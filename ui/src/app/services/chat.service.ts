@@ -81,6 +81,6 @@ export class ChatService {
   //* Error Handling
   // sends through the http response error
   private handleError(error: HttpErrorResponse) {
-    return throwError(() => error.error);
+    return throwError(() => error);
   }
 }

@@ -19,6 +19,7 @@ import {
   Pencil,
 } from 'lucide-angular';
 import { tap } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-drawer',
@@ -58,11 +59,11 @@ export class DrawerComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadChats();
-    this.loadCurrentlyOpenChat();
+    //this.loadCurrentlyOpenChat();
   }
 
   onSelectChat(chat: Chat) {
-    this.saveCurrentlyOpenChat(chat);
+    //this.saveCurrentlyOpenChat(chat);
     this.chatSelectedChange.emit(chat);
   }
 
@@ -131,7 +132,16 @@ export class DrawerComponent implements OnInit {
 
   //^ Chat Logic
   private loadChats() {
-    this.chatService.getChats().subscribe((chats) => (this.chats = chats));
+    this.chatService.getChats().subscribe({
+      next: (chats: Chat[]) => (this.chats = chats),
+      error: (error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          this.newChat();
+        } else {
+          console.error('Error loading chats:', error);
+        }
+      },
+    });
   }
 
   private newChat() {
@@ -143,28 +153,28 @@ export class DrawerComponent implements OnInit {
       })
       .pipe(
         tap((chat) => {
-          this.saveCurrentlyOpenChat(chat);
+          //this.saveCurrentlyOpenChat(chat);
           this.onSelectChat(chat);
         })
       )
       .subscribe(() => this.loadChats());
   }
 
-  private loadCurrentlyOpenChat() {
-    const storedChatId = localStorage.getItem(this.storageKey);
-    if (storedChatId) {
-      this.chatService.getChat(storedChatId).subscribe((chat) => {
-        if (chat) {
-          this.chatSelectedChange.emit(chat);
-        }
-      });
-    }
-  }
+  // private loadCurrentlyOpenChat() {
+  //   const storedChatId = localStorage.getItem(this.storageKey);
+  //   if (storedChatId) {
+  //     this.chatService.getChat(storedChatId).subscribe((chat) => {
+  //       if (chat) {
+  //         this.chatSelectedChange.emit(chat);
+  //       }
+  //     });
+  //   }
+  // }
 
-  private saveCurrentlyOpenChat(chat: Chat) {
-    if (!chat._id) {
-      throw new Error('Chat does not have an ID');
-    }
-    localStorage.setItem(this.storageKey, chat._id);
-  }
+  // private saveCurrentlyOpenChat(chat: Chat) {
+  //   if (!chat._id) {
+  //     throw new Error('Chat does not have an ID');
+  //   }
+  //   localStorage.setItem(this.storageKey, chat._id);
+  // }
 }

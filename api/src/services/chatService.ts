@@ -4,12 +4,13 @@ import { newAiTitle } from "./aiTitleService";
 
 //^ Create Chat
 export const createChat = async (
+  userId: string,
   model: string,
   apiKey: string,
   title?: string
 ): Promise<Chat> => {
   try {
-    const newChat = new Chat({ model, apiKey, title });
+    const newChat = new Chat({ userId, model, apiKey, title });
     return await newChat.save();
   } catch (error) {
     console.error(`Error creating chat: ${error}`);
@@ -18,9 +19,9 @@ export const createChat = async (
 };
 
 //^ Get Multiple Chats
-export const fetchChats = async (userID: string): Promise<Chat[]> => {
+export const fetchChats = async (userId: string): Promise<Chat[]> => {
   try {
-    return await Chat.find({ userId: userID }).sort({ updatedAt: -1 });
+    return await Chat.find({ userId: userId }).sort({ updatedAt: -1 });
   } catch (error) {
     console.error(`Error getting chats: ${error}`);
     throw error;
@@ -28,9 +29,12 @@ export const fetchChats = async (userID: string): Promise<Chat[]> => {
 };
 
 //^ Get One Chat
-export const fetchChat = async (id: string): Promise<Chat | null> => {
+export const fetchChat = async (
+  id: string,
+  userId: string
+): Promise<Chat | null> => {
   try {
-    return await Chat.findById(id);
+    return await Chat.findById(id, { userId: userId });
   } catch (error) {
     console.error(`Error getting chat: ${error}`);
     throw error;
@@ -38,9 +42,12 @@ export const fetchChat = async (id: string): Promise<Chat | null> => {
 };
 
 //^ Delete One Chat
-export const removeChat = async (id: string): Promise<Chat | null> => {
+export const removeChat = async (
+  id: string,
+  userId: string
+): Promise<Chat | null> => {
   try {
-    return await Chat.findByIdAndDelete(id);
+    return await Chat.findByIdAndDelete(id, { userId: userId });
   } catch (error) {
     console.error(`Error deleting chat: ${error}`);
     throw error;
@@ -48,9 +55,9 @@ export const removeChat = async (id: string): Promise<Chat | null> => {
 };
 
 //^ Delete Multiple Chats
-export const removeChats = async () => {
+export const removeChats = async (userId: string) => {
   try {
-    return await Chat.deleteMany().exec();
+    return await Chat.deleteMany({ userId: userId });
   } catch (error) {
     console.error(`Error deleting chats: ${error}`);
     throw error;
@@ -60,10 +67,14 @@ export const removeChats = async () => {
 //^ Update One Chat
 export const updateChat = async (
   id: string,
-  update: Partial<Chat>
+  update: Partial<Chat>,
+  userId: string
 ): Promise<Chat | null> => {
   try {
-    return await Chat.findByIdAndUpdate(id, update, { new: true });
+    return await Chat.findByIdAndUpdate(id, update, {
+      new: true,
+      userId: userId,
+    });
   } catch (error) {
     console.error(`Error updating chat: ${error}`);
     throw error;
@@ -74,11 +85,12 @@ export const updateChat = async (
 // returns updated chat with the new message
 export const createMessage = async (
   chatId: string,
-  newMessage: string
+  newMessage: string,
+  userId: string
 ): Promise<Chat | null> => {
   try {
     // if chat doesn't exist
-    const chat = await fetchChat(chatId);
+    const chat = await fetchChat(chatId, userId);
     if (!chat) {
       throw new Error("Chat not found");
     }
@@ -104,7 +116,7 @@ export const createMessage = async (
     const updatedChat = await newAiMessage(chat, newMessage);
 
     // save the updated chat
-    return await updateChat(chatId, updatedChat);
+    return await updateChat(chatId, updatedChat, userId);
   } catch (error) {
     console.error(`Error creating message: ${error}`);
     throw error;
