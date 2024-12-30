@@ -13,7 +13,10 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Allows ui to make requests api from dif domains
+// Middleware to parse JSON
+app.use(express.json());
+
+// Allows UI to make requests api from dif domains
 app.use(
   cors({
     origin: "http://localhost:4200", //TODO: Angular URL
@@ -36,7 +39,7 @@ passportConfig();
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Morgan logger
+// Morgan Logger
 morgan.token("body", (req: Request) => {
   return JSON.stringify(req.body);
 });

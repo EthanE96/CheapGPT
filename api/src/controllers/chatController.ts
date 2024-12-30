@@ -89,8 +89,11 @@ export const deleteChats = async (req: Request, res: Response) => {
 //^ Post Message
 export const postMessage = async (req: Request, res: Response) => {
   try {
-    const newMessage = req.body.content as string;
+    if (!req.body.content) {
+      throw new Error("Message content is required");
+    }
 
+    const newMessage = req.body.content as string;
     const chat = await fetchChat(req.params.id);
     if (!chat) {
       res.status(404).json({ error: "Chat not found" });
