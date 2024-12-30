@@ -36,12 +36,10 @@
           tabindex="0"
           class="menu dropdown-content bg-base-100 rounded-box z-[1] mt-4 w-52 p-2 shadow"
         >
-          <li><a>Account Settings</a></li>
-          <li>
-            <app-llm-model-settings
-              (modelChange)="onModelChange($event)"
-            ></app-llm-model-settings>
-          </li>
+          <app-llm-model-settings
+            (modelChange)="onModelChange($event)"
+          ></app-llm-model-settings>
+
           <li>
             <a (click)="onLogout()"> Logout </a>
           </li>
