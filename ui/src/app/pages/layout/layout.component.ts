@@ -3,10 +3,16 @@ import { ChatComponent } from '../chat/chat.component';
 import { Chat } from '../../models/chat.model';
 import { DrawerComponent } from '../drawer/drawer.component';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, PanelLeftOpen, Settings } from 'lucide-angular';
-import { User } from '../../models/user.model';
+import {
+  LucideAngularModule,
+  PanelLeftOpen,
+  Settings,
+  Sun,
+  Moon,
+} from 'lucide-angular';
 import { Router } from '@angular/router';
 import { LlmModelSettingsComponent } from './llm-model-settings/llm-model-settings.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-layout',
@@ -24,11 +30,13 @@ import { LlmModelSettingsComponent } from './llm-model-settings/llm-model-settin
 export class LayoutComponent {
   readonly PanelLeftOpen = PanelLeftOpen;
   readonly Settings = Settings;
+  readonly Sun = Sun;
+  readonly Moon = Moon;
 
   @Input() isDrawerOpen: boolean = true;
   @Output() isDrawerOpenChange = new EventEmitter();
 
-  currentUser: User | null = null;
+  currentUser$ = this.authService.currentUser$;
   selectedChat: Chat = {
     model: 'GPT-4',
     apiKey: 'Test key',
@@ -36,7 +44,7 @@ export class LayoutComponent {
   };
   newMessage: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;

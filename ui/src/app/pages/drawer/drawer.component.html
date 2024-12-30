@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="flex-grow p-1">
-    <h1 class="text-2xl font-bold p-2 pb-3">Chat History</h1>
+    <h1 class="text-xl font-semibold p-2 pb-3">Chat History</h1>
     <ng-container *ngFor="let chat of chats">
       <ul>
         <li class="flex items-center">
@@ -35,7 +35,7 @@
               <!-- Display Chat Title -->
               <button
                 (click)="onSelectChat(chat)"
-                class="btn btn-ghost w-full h-full justify-start text-left text-base"
+                class="btn btn-ghost w-full h-full justify-start text-left text-sm px-2"
               >
                 {{ chat.title }}
               </button>
