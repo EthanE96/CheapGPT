@@ -3,7 +3,7 @@ import { Profile } from "passport";
 
 export interface User extends Profile {
   // Additional fields
-  _id?: string;
+  _id: string;
   createdAt: Date;
   updatedAt?: Date;
 }

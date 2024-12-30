@@ -18,9 +18,9 @@ export const createChat = async (
 };
 
 //^ Get Multiple Chats
-export const fetchChats = async (): Promise<Chat[]> => {
+export const fetchChats = async (userID: string): Promise<Chat[]> => {
   try {
-    return await Chat.find();
+    return await Chat.find({ userId: userID }).sort({ updatedAt: -1 });
   } catch (error) {
     console.error(`Error getting chats: ${error}`);
     throw error;

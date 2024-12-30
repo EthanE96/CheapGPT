@@ -8,6 +8,7 @@ import {
   removeChats,
   updateChat,
 } from "../services/chatService";
+import { User } from "../models/userModel";
 
 //^ Post Chat
 export const postChat = async (req: Request, res: Response) => {
@@ -23,7 +24,8 @@ export const postChat = async (req: Request, res: Response) => {
 //^ Get Chats
 export const getChats = async (req: Request, res: Response) => {
   try {
-    const chats = await fetchChats();
+    const userID = getUserId(req);
+    const chats = await fetchChats(userID);
     if (chats.length === 0) {
       res.status(404).json({ error: "Chat not found" });
       return;
@@ -105,4 +107,18 @@ export const postMessage = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ error: (error as Error).message });
   }
+};
+
+const getUserId = (req: Request): string => {
+  if (!req.user) {
+    throw new Error("User is not authenticated");
+  }
+
+  const userID = (req.user as User)._id;
+
+  if (!userID) {
+    throw new Error("User ID not found");
+  }
+
+  return userID;
 };
