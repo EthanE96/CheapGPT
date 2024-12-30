@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChatComponent } from '../chat/chat.component';
-import { ModalSettingsComponent } from '../modal-settings/modal-settings.component';
 import { Chat } from '../../models/chat.model';
 import { DrawerComponent } from '../drawer/drawer.component';
 import { CommonModule } from '@angular/common';
-import { LucideAngularModule, PanelLeftOpen } from 'lucide-angular';
-
+import { LucideAngularModule, PanelLeftOpen, Settings } from 'lucide-angular';
 import { User } from '../../models/user.model';
+import { Router } from '@angular/router';
+import { LlmModelSettingsComponent } from './llm-model-settings/llm-model-settings.component';
 
 @Component({
   selector: 'app-layout',
@@ -15,7 +15,7 @@ import { User } from '../../models/user.model';
     CommonModule,
     LucideAngularModule,
     ChatComponent,
-    ModalSettingsComponent,
+    LlmModelSettingsComponent,
     DrawerComponent,
   ],
   templateUrl: './layout.component.html',
@@ -23,6 +23,8 @@ import { User } from '../../models/user.model';
 })
 export class LayoutComponent {
   readonly PanelLeftOpen = PanelLeftOpen;
+  readonly Settings = Settings;
+
   @Input() isDrawerOpen: boolean = true;
   @Output() isDrawerOpenChange = new EventEmitter();
 
@@ -34,7 +36,7 @@ export class LayoutComponent {
   };
   newMessage: boolean = false;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -53,5 +55,9 @@ export class LayoutComponent {
 
   onNewMessage() {
     this.newMessage = true;
+  }
+
+  onLogout() {
+    this.router.navigate(['/logout']);
   }
 }

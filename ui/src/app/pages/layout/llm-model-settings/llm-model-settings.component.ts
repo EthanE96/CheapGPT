@@ -1,17 +1,14 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-modal-settings',
+  selector: 'app-llm-model-settings',
   standalone: true,
   imports: [],
-  templateUrl: './modal-settings.component.html',
-  styleUrl: './modal-settings.component.scss',
+  templateUrl: './llm-model-settings.component.html',
+  styleUrl: './llm-model-settings.component.scss',
 })
-export class ModalSettingsComponent {
+export class LlmModelSettingsComponent {
   @Output() modelChange = new EventEmitter();
-
-  constructor(private router: Router) {}
 
   model = {
     key: '',
@@ -22,10 +19,5 @@ export class ModalSettingsComponent {
     this.model.key = key;
     this.model.model = model;
     this.modelChange.emit(this.model);
-  }
-
-  onLogout() {
-    this.modelChange.emit(null);
-    this.router.navigate(['/logout']);
   }
 }
