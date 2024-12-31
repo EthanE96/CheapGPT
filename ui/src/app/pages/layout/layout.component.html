@@ -23,7 +23,7 @@
       <div class="flex-none">
         <p
           class="text-base font-semibold px-2"
-          *ngIf="(currentUser$ | async)?.displayName as displayName"
+          *ngIf="($currentUser | async)?.displayName as displayName"
         >
           {{ displayName }}
         </p>
@@ -46,8 +46,9 @@
               <label class="grid cursor-pointer place-items-center">
                 <input
                   type="checkbox"
-                  value="bumblebee"
-                  class="toggle theme-controller bg-base-content col-span-2 col-start-1 row-start-1"
+                  class="toggle bg-base-content col-span-2 col-start-1 row-start-1"
+                  [checked]="currentTheme === defaultTheme"
+                  (change)="onThemeToggle()"
                 />
                 <i-lucide
                   class="stroke-base-100 fill-base-100 col-start-1 row-start-1 w-3 h-3"

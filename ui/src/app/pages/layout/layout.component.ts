@@ -13,6 +13,7 @@ import {
 import { Router } from '@angular/router';
 import { LlmModelSettingsComponent } from './llm-model-settings/llm-model-settings.component';
 import { AuthService } from '../../services/auth.service';
+import { ThemeComponent } from '../../shared/theme/theme.component';
 
 @Component({
   selector: 'app-layout',
@@ -36,15 +37,21 @@ export class LayoutComponent {
   @Input() isDrawerOpen: boolean = true;
   @Output() isDrawerOpenChange = new EventEmitter();
 
-  currentUser$ = this.authService.currentUser$;
+  $currentUser = this.authService.$currentUser;
   selectedChat: Chat = {
     model: 'GPT-4',
     apiKey: 'Test key',
     message: [],
   };
   newMessage: boolean = false;
+  currentTheme = this.themeComponent.currentTheme;
+  defaultTheme = this.themeComponent.defaultTheme;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private themeComponent: ThemeComponent
+  ) {}
 
   onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -67,5 +74,9 @@ export class LayoutComponent {
 
   onLogout() {
     this.router.navigate(['/logout']);
+  }
+
+  onThemeToggle() {
+    this.themeComponent.themeToggle();
   }
 }
