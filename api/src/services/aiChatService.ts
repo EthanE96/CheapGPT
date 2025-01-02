@@ -63,9 +63,9 @@ const convertMessages = (
 ): (SystemMessage | HumanMessage | AIMessage)[] => {
   return message.map((message) => {
     if (message.isUser) {
-      return new HumanMessage(message.content);
+      return new HumanMessage(message.content as string);
     } else {
-      return new AIMessage(message.content);
+      return new AIMessage(message.content as string);
     }
   });
 };

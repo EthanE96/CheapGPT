@@ -1,3 +1,4 @@
+import { MessageContentComplex } from "@langchain/core/messages";
 import mongoose, { Schema } from "mongoose";
 
 export interface Chat {
@@ -12,7 +13,7 @@ export interface Chat {
 }
 
 export interface Message {
-  content: string;
+  content: string | MessageContentComplex[];
   isUser: boolean;
   tokens?: Tokens;
   cost?: number;
