@@ -3,7 +3,7 @@
   <!-- Left Sidebar -->
   <app-drawer
     *ngIf="isDrawerOpen"
-    (chatSelectedChange)="onChatSelected($event)"
+    [(selectedChat)]="selectedChat"
     [(isDrawerOpen)]="isDrawerOpen"
     [(newMessage)]="newMessage"
     class="flex flex-shrink-0 overflow-x-hidden max-md:!w-0 w-72"
@@ -75,7 +75,10 @@
 
     <!-- Main Content -->
     <div class="grow">
-      <app-chat [chat]="selectedChat" (newMessage)="onNewMessage()"></app-chat>
+      <app-chat
+        [chat]="selectedChat"
+        (newMessage)="onNewMessage($event)"
+      ></app-chat>
     </div>
 
     <!-- Footer -->

@@ -10,6 +10,7 @@ import {
 import { ChatService } from '../../services/chat.service';
 import { Chat } from '../../models/chat.model';
 import { CommonModule } from '@angular/common';
+
 import {
   LucideAngularModule,
   EllipsisVertical,
@@ -18,8 +19,8 @@ import {
   Trash,
   Pencil,
 } from 'lucide-angular';
-import { tap } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, of, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-drawer',
@@ -34,12 +35,14 @@ export class DrawerComponent implements OnInit {
   readonly SquarePlus = SquarePlus;
   readonly Trash = Trash;
   readonly Pencil = Pencil;
-  private storageKey = 'currentlyOpenChat';
 
   @Input() isDrawerOpen: boolean = true;
+  @Input() selectedChat?: Chat;
   @Input() set newMessage(value: boolean) {
     Promise.resolve().then(() => {
       if (value === true) {
+        // chat component created a new chat and message and its
+        console.log('test new message chat in drawer', this.selectedChat); //! REMOVE
         this.loadChats();
         this.newMessageChange.emit(false);
       }
@@ -47,7 +50,7 @@ export class DrawerComponent implements OnInit {
   }
   @Output() newMessageChange = new EventEmitter();
   @Output() isDrawerOpenChange = new EventEmitter();
-  @Output() chatSelectedChange = new EventEmitter();
+  @Output() selectedChatChange = new EventEmitter<Chat | undefined>();
   @ViewChild('chatInput') chatInput!: ElementRef<HTMLInputElement>;
 
   chats: Chat[] = [];
@@ -59,16 +62,16 @@ export class DrawerComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadChats();
-    //this.loadCurrentlyOpenChat();
   }
 
   onSelectChat(chat: Chat) {
-    //this.saveCurrentlyOpenChat(chat);
-    this.chatSelectedChange.emit(chat);
+    this.selectedChat = chat;
+    this.selectedChatChange.emit(chat);
   }
 
   onNewChat() {
-    this.newChat();
+    this.selectedChat = undefined;
+    this.selectedChatChange.emit(undefined);
   }
 
   onToggleEdit(chat: Chat) {
@@ -94,29 +97,18 @@ export class DrawerComponent implements OnInit {
 
   onDeleteChat(chat: Chat) {
     if (chat && chat._id) {
-      if (this.chats.length === 1) {
-        this.newChat();
-        this.chatService.deleteChat(chat._id).subscribe(() => {
-          this.loadChats();
-        });
-      } else {
-        this.chatService.deleteChat(chat._id).subscribe(() => {
-          this.loadChats();
-        });
-      }
-
-      if (this.storageKey === chat._id) {
-        localStorage.removeItem(this.storageKey);
-      }
+      this.chatService.deleteChat(chat._id).subscribe(() => {
+        this.loadChats();
+      });
     }
   }
 
   onDeleteAllChats() {
-    this.chatService.deleteChats().subscribe(() => {
-      this.newChat();
-      this.loadChats();
+    this.chatService.deleteChats().subscribe({
+      complete: () => {
+        this.loadChats();
+      },
     });
-    localStorage.removeItem(this.storageKey);
   }
 
   onDrawerChange() {
@@ -132,49 +124,21 @@ export class DrawerComponent implements OnInit {
 
   //^ Chat Logic
   private loadChats() {
-    this.chatService.getChats().subscribe({
-      next: (chats: Chat[]) => (this.chats = chats),
-      error: (error: HttpErrorResponse) => {
-        if (error.status === 404) {
-          this.newChat();
-        } else {
-          console.error('Error loading chats:', error);
-        }
-      },
-    });
-  }
-
-  private newChat() {
     this.chatService
-      .postChat({
-        model: 'GPT-4',
-        apiKey: 'Test key',
-        message: [],
-      })
+      .getChats()
       .pipe(
-        tap((chat) => {
-          //this.saveCurrentlyOpenChat(chat);
-          this.onSelectChat(chat);
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 404) {
+            return of([]);
+          } else {
+            return throwError(() => error);
+          }
         })
       )
-      .subscribe(() => this.loadChats());
+      .subscribe({
+        next: (chats) => {
+          this.chats = chats;
+        },
+      });
   }
-
-  // private loadCurrentlyOpenChat() {
-  //   const storedChatId = localStorage.getItem(this.storageKey);
-  //   if (storedChatId) {
-  //     this.chatService.getChat(storedChatId).subscribe((chat) => {
-  //       if (chat) {
-  //         this.chatSelectedChange.emit(chat);
-  //       }
-  //     });
-  //   }
-  // }
-
-  // private saveCurrentlyOpenChat(chat: Chat) {
-  //   if (!chat._id) {
-  //     throw new Error('Chat does not have an ID');
-  //   }
-  //   localStorage.setItem(this.storageKey, chat._id);
-  // }
 }

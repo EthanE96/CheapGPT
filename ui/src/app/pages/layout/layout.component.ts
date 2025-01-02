@@ -38,12 +38,10 @@ export class LayoutComponent {
   @Output() isDrawerOpenChange = new EventEmitter();
 
   $currentUser = this.authService.$currentUser;
-  selectedChat: Chat = {
-    model: 'GPT-4',
-    apiKey: 'Test key',
-    message: [],
-  };
+  selectedChat?: Chat;
   newMessage: boolean = false;
+  newChat?: Chat;
+
   currentTheme = this.themeComponent.currentTheme;
   defaultTheme = this.themeComponent.defaultTheme;
   logo = this.themeComponent.logo;
@@ -65,12 +63,10 @@ export class LayoutComponent {
     }
   }
 
-  onChatSelected(chat: Chat) {
-    this.selectedChat = chat;
-  }
-
-  onNewMessage() {
+  onNewMessage(chat: Chat) {
     this.newMessage = true;
+    this.selectedChat = chat;
+    console.log(this.selectedChat, 'chat changed in layoyt'); //! REMOVE
   }
 
   onLogout() {
