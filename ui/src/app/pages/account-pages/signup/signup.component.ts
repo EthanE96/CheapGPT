@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
+import { ThemeComponent } from '../../../shared/theme/theme.component';
 
 @Component({
   selector: 'app-signup',
@@ -10,7 +11,11 @@ import { AuthService } from '../../../services/auth.service';
   styleUrl: './signup.component.scss',
 })
 export class SignupComponent {
-  constructor(private authService: AuthService) {}
+  logo = this.theme.logo;
+  constructor(
+    private authService: AuthService,
+    private theme: ThemeComponent
+  ) {}
 
   signupWithGoogle() {
     this.authService.loginWithGoogle();

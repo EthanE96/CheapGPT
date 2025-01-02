@@ -46,6 +46,7 @@ export class LayoutComponent {
   newMessage: boolean = false;
   currentTheme = this.themeComponent.currentTheme;
   defaultTheme = this.themeComponent.defaultTheme;
+  logo = this.themeComponent.logo;
 
   constructor(
     private router: Router,
@@ -77,6 +78,7 @@ export class LayoutComponent {
   }
 
   onThemeToggle() {
-    this.themeComponent.themeToggle();
+    this.themeComponent.toggleTheme();
+    this.logo = this.themeComponent.logo;
   }
 }
