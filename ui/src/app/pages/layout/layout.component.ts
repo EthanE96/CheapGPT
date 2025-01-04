@@ -13,6 +13,7 @@ import {
 import { Router } from '@angular/router';
 import { LlmModelSettingsComponent } from './llm-model-settings/llm-model-settings.component';
 import { AuthService } from '../../services/auth.service';
+import { ThemeComponent } from '../../shared/theme/theme.component';
 
 @Component({
   selector: 'app-layout',
@@ -36,15 +37,20 @@ export class LayoutComponent {
   @Input() isDrawerOpen: boolean = true;
   @Output() isDrawerOpenChange = new EventEmitter();
 
-  currentUser$ = this.authService.currentUser$;
-  selectedChat: Chat = {
-    model: 'GPT-4',
-    apiKey: 'Test key',
-    message: [],
-  };
+  $currentUser = this.authService.$currentUser;
+  selectedChat?: Chat;
   newMessage: boolean = false;
+  newChat?: Chat;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  currentTheme = this.themeComponent.currentTheme;
+  defaultTheme = this.themeComponent.defaultTheme;
+  logo = this.themeComponent.logo;
+
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private themeComponent: ThemeComponent
+  ) {}
 
   onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;
@@ -57,15 +63,18 @@ export class LayoutComponent {
     }
   }
 
-  onChatSelected(chat: Chat) {
-    this.selectedChat = chat;
-  }
-
-  onNewMessage() {
+  onNewMessage(chat: Chat) {
     this.newMessage = true;
+    this.selectedChat = chat;
+    console.log(this.selectedChat, 'chat changed in layoyt'); //! REMOVE
   }
 
   onLogout() {
     this.router.navigate(['/logout']);
+  }
+
+  onThemeToggle() {
+    this.themeComponent.toggleTheme();
+    this.logo = this.themeComponent.logo;
   }
 }

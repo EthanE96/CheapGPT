@@ -16,7 +16,7 @@
     <h1 class="text-xl font-semibold p-2 pb-3">Chat History</h1>
     <ng-container *ngFor="let chat of chats">
       <ul>
-        <li class="flex items-center">
+        <li class="flex items-center" [class.active]="selectedChat === chat">
           <!-- Chat Title -->
           <div class="flex-grow">
             <ng-container *ngIf="editingChat === chat; else viewMode">
