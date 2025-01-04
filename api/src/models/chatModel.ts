@@ -5,7 +5,7 @@ export interface Chat {
   _id: string;
   userId: string;
   message?: Message[];
-  model: string;
+  modelId: string;
   apiKey: string;
   title: string;
   totalTokens?: Tokens;
@@ -47,7 +47,7 @@ const chatSchema = new Schema<Chat>(
         date: { type: Date, default: Date.now },
       },
     ],
-    model: { type: String, required: true },
+    modelId: { type: String, required: true },
     apiKey: { type: String, required: true },
     title: { type: String, required: true, default: "New Chat" },
     totalTokens: {

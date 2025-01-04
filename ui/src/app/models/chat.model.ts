@@ -1,7 +1,7 @@
 export interface Chat {
   _id?: string;
   message: Message[];
-  model: string;
+  modelId: string;
   apiKey: string;
   title?: string;
   totalTokens?: Tokens;

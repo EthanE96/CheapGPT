@@ -42,8 +42,8 @@ export class ChatComponent {
       // create a new chat
       this.chat = await firstValueFrom(
         this.chatService.postChat({
-          model: 'GPT-4',
-          apiKey: 'Test key',
+          modelId: 'llama-3.3-70b-versatile',
+          apiKey: 'test key',
           message: [],
         })
       );

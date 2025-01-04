@@ -12,6 +12,7 @@ export class InputComponent {
   @Output() valueOut = new EventEmitter<string>();
 
   constructor(private chatService: ChatService) {}
+  // TODO: Add input focus o init
 
   async sendValue(content: string) {
     if (content.trim() !== '') {
