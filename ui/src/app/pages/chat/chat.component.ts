@@ -13,7 +13,9 @@ import { marked } from 'marked';
 import { InputComponent } from '../../shared/input/input.component';
 import { NewChatComponent } from './new-chat/new-chat.component';
 import { LucideAngularModule, ArrowDown } from 'lucide-angular';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
+import { ModelsService } from '../../services/models.service';
+import { Model } from '../../models/model.model';
 
 @Component({
   selector: 'app-chat',
@@ -32,18 +34,31 @@ export class ChatComponent {
 
   @Input() chat?: Chat;
   @Output() newMessage = new EventEmitter<Chat>();
-
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private modelService: ModelsService
+  ) {}
+
+  $models: Observable<Model[]> = this.modelService.getModels();
 
   async sendMessage(message: string, newMessage?: boolean) {
+    // get llm model
+    const modelName =
+      localStorage.getItem('model') || 'llama-3.3-70b-versatile';
+    const model = (await firstValueFrom(this.$models)).find(
+      (m) => m.modelName === modelName
+    );
+    if (!model || !model._id) {
+      throw new Error('Model not found');
+    }
+
     if (newMessage) {
       // create a new chat
       this.chat = await firstValueFrom(
         this.chatService.postChat({
-          modelId: 'llama-3.3-70b-versatile',
-          apiKey: 'test key',
+          modelId: model._id,
           message: [],
         })
       );

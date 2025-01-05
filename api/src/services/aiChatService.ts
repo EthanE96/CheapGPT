@@ -14,28 +14,33 @@ import {
 } from "@langchain/core/messages";
 
 //AI
-import { ChatGroq } from "@langchain/groq";
 import { trimmer } from "../ai/ai-config/aiConfig";
 import { chatTemplate } from "../ai/ai-config/aiTemplates";
 
 //Models
 import { Chat, Message } from "../models/chatModel";
+import { Model } from "../models/modelModel";
+import { ChatGroq } from "@langchain/groq";
 
 /**
  * Calls a model with a given input and returns the response
  * @param {Object} input - an object with a messages property
- * @param {string} model - the name of the AI model to use
  * @returns {Promise<AIMessage>} - the response from the AI model
  */
 const chatChain = async (
   input: {
     messages: (HumanMessage | AIMessage | SystemMessage)[];
   },
-  llmModel: ChatGroq
+  model: Model
 ) => {
   // Define the function that calls the model
   const callModel = async (state: typeof MessagesAnnotation.State) => {
-    const chain = chatTemplate.pipe(llmModel);
+    // convert my model into a ChatGroq model
+    const groqModel = new ChatGroq({
+      model: model.modelName,
+    });
+
+    const chain = chatTemplate.pipe(groqModel);
     const trimmedMessage = await trimmer.invoke(state.messages);
 
     const response = await chain.invoke({
@@ -81,13 +86,12 @@ const convertMessages = (
  *
  * @param chat The chat to append the AI's response to
  * @param newMessage The new message to process
- * @param llmModel The language model to use for generating the AI response
  * @returns The updated chat with the AI's response
  */
 export const newAiMessage = async (
   chat: Chat,
   newMessage: string,
-  llmModel: ChatGroq
+  model: Model
 ): Promise<Chat> => {
   // Message converter
   chat.message = chat.message || [];
@@ -100,7 +104,7 @@ export const newAiMessage = async (
   };
 
   // Call AI
-  const output = await chatChain(input, llmModel);
+  const output = await chatChain(input, model);
 
   // Update message history with response
   chat.message.push({

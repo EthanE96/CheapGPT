@@ -2,7 +2,6 @@ export interface Chat {
   _id?: string;
   message: Message[];
   modelId: string;
-  apiKey: string;
   title?: string;
   totalTokens?: Tokens;
   totalCost?: number;

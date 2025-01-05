@@ -9,7 +9,6 @@ import {
   updateChat,
 } from "../services/chatService";
 import { User } from "../models/userModel";
-import { getAiModel } from "../ai/ai-config/aiModels";
 
 //^ Post Chat
 export const postChat = async (req: Request, res: Response) => {
@@ -111,20 +110,8 @@ export const postMessage = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Chat not found" });
     }
 
-    // Check if the LLM Model is valid
-    const llmModel = chat.modelId as string;
-    const validModel = getAiModel(llmModel);
-    if (!llmModel || !validModel) {
-      return res.status(400).json({ error: "LLM Model is invalid" });
-    }
-
     // Create the message
-    const updatedChat = await createMessage(
-      chat,
-      newMessage,
-      validModel,
-      userID
-    );
+    const updatedChat = await createMessage(chat, newMessage, userID);
 
     return res.status(200).json(updatedChat);
   } catch (error) {

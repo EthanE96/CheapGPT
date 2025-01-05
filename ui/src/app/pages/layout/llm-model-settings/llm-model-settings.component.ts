@@ -1,23 +1,24 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { AsyncPipe, NgFor } from '@angular/common';
+import { ModelsService } from '../../../services/models.service';
+import { Observable } from 'rxjs';
+import { Model } from '../../../models/model.model';
 
 @Component({
   selector: 'app-llm-model-settings',
   standalone: true,
-  imports: [],
+  imports: [AsyncPipe, NgFor, FormsModule],
   templateUrl: './llm-model-settings.component.html',
   styleUrl: './llm-model-settings.component.scss',
 })
 export class LlmModelSettingsComponent {
-  @Output() modelChange = new EventEmitter();
+  models$: Observable<Model[]> = this.modelsService.getModels();
+  selectedModelId = localStorage.getItem('model') || '';
 
-  model = {
-    key: '',
-    model: '',
-  };
+  constructor(private modelsService: ModelsService) {}
 
-  onSave(key: string, model: string) {
-    this.model.key = key;
-    this.model.model = model;
-    this.modelChange.emit(this.model);
+  onSave(model: string) {
+    localStorage.setItem('model', model);
   }
 }

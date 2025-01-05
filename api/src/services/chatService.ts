@@ -1,7 +1,7 @@
-import { ChatGroq } from "@langchain/groq";
 import { Chat } from "../models/chatModel";
 import { newAiMessage } from "./aiChatService";
 import { newAiTitle } from "./aiTitleService";
+import { fetchModel } from "./modelService";
 
 //^ Create Chat
 export const createChat = async (
@@ -90,7 +90,6 @@ export const updateChat = async (
 export const createMessage = async (
   chat: Chat,
   newMessage: string,
-  llmModel: ChatGroq,
   userId: string
 ): Promise<Chat | null> => {
   try {
@@ -100,14 +99,20 @@ export const createMessage = async (
       throw new Error("Last message is not a AI message");
     }
 
+    // get LLM model
+    const model = await fetchModel(chat.modelId);
+    if (!model) {
+      throw new Error("LLM model not found");
+    }
+
     // if new message, add new title
     if (!lastMessage || lastMessage.content !== newMessage) {
-      const title = await newAiTitle(newMessage, llmModel);
+      const title = await newAiTitle(newMessage, model);
       chat.title = title;
     }
 
     // this function accepts a chat and a new message and returns an updated chat with ai message
-    const updatedChat = await newAiMessage(chat, newMessage, llmModel);
+    const updatedChat = await newAiMessage(chat, newMessage, model);
 
     // save the updated chat
     return await updateChat(chat._id, updatedChat, userId);

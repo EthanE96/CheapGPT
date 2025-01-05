@@ -12,7 +12,6 @@ import {
 } from 'lucide-angular';
 import { Router } from '@angular/router';
 import { LlmModelSettingsComponent } from './llm-model-settings/llm-model-settings.component';
-import { AuthService } from '../../services/auth.service';
 import { ThemeComponent } from '../../shared/theme/theme.component';
 
 @Component({
@@ -37,36 +36,24 @@ export class LayoutComponent {
   @Input() isDrawerOpen: boolean = true;
   @Output() isDrawerOpenChange = new EventEmitter();
 
-  $currentUser = this.authService.$currentUser;
   selectedChat?: Chat;
   newMessage: boolean = false;
   newChat?: Chat;
 
   currentTheme = this.themeComponent.currentTheme;
-  defaultTheme = this.themeComponent.defaultTheme;
+  imgTheme = this.currentTheme === 'dark' ? Sun : Moon;
   logo = this.themeComponent.logo;
 
-  constructor(
-    private router: Router,
-    private authService: AuthService,
-    private themeComponent: ThemeComponent
-  ) {}
+  constructor(private router: Router, private themeComponent: ThemeComponent) {}
 
   onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;
     this.isDrawerOpenChange.emit(this.isDrawerOpen);
   }
 
-  onModelChange(model: unknown) {
-    if (model) {
-      console.log('model change'); //! REMOVE
-    }
-  }
-
   onNewMessage(chat: Chat) {
     this.newMessage = true;
     this.selectedChat = chat;
-    console.log(this.selectedChat, 'chat changed in layoyt'); //! REMOVE
   }
 
   onLogout() {
@@ -74,7 +61,8 @@ export class LayoutComponent {
   }
 
   onThemeToggle() {
-    this.themeComponent.toggleTheme();
+    this.currentTheme = this.themeComponent.toggleTheme();
     this.logo = this.themeComponent.logo;
+    this.imgTheme = this.currentTheme === 'dark' ? Sun : Moon;
   }
 }
