@@ -61,4 +61,20 @@ const chatSchema = new Schema<Chat>(
   }
 );
 
+// Middleware to calculate cost
+
+//! Comment out, as Groq does disclose cost per token.
+// chatSchema.pre("save", function (next) {
+//   const chat = this as Chat;
+//   if (chat.message && Array.isArray(chat.message)) {
+//     chat.message.forEach((msg) => {
+//       if (msg.tokens && msg.tokens.totalTokens) {
+//         msg.cost =
+//           msg.tokens.promptTokens * 0.003 + msg.tokens.completionTokens * 0.001;
+//       }
+//     });
+//   }
+//   next();
+// });
+
 export const Chat = mongoose.model<Chat>("Chat", chatSchema);

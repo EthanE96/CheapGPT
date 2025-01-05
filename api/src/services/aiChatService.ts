@@ -15,7 +15,7 @@ import {
 
 //AI
 import { trimmer } from "../ai/ai-config/aiConfig";
-import { chatTemplate } from "../ai/ai-config/aiTemplates";
+import { getChatTemplate } from "../ai/ai-config/aiTemplates";
 
 //Models
 import { Chat, Message } from "../models/chatModel";
@@ -40,7 +40,7 @@ const chatChain = async (
       model: model.modelName,
     });
 
-    const chain = chatTemplate.pipe(groqModel);
+    const chain = getChatTemplate(model).pipe(groqModel);
     const trimmedMessage = await trimmer.invoke(state.messages);
 
     const response = await chain.invoke({

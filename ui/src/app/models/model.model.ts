@@ -3,6 +3,7 @@ export interface Model {
   modelDisplayName: string;
   modelName: string;
   temperature: number;
+  systemPrompt: string;
   maxTokens?: number;
   logo: string;
   createdAt: Date;

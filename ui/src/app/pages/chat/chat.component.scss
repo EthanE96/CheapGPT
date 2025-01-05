@@ -1,3 +1,71 @@
+::ng-deep .chat-content {
+  // Code
+  pre {
+    @apply bg-base-300 rounded-lg p-4 my-2 overflow-auto relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: "Courier New", Courier, monospace;
+  }
+
+  // Syntax highlighting for code blocks
+  code {
+    @apply text-base-content;
+  }
+
+  code:not(pre code) {
+    @apply text-neutral-content;
+    @apply italic;
+  }
+
+  // Add styles for inline code if needed
+  code {
+    @apply px-1 py-0.5 bg-base-300 rounded text-neutral-content;
+  }
+
+  // Apply styles to headers
+  h1 {
+    @apply text-4xl font-bold my-4;
+  }
+
+  h2 {
+    @apply text-3xl font-semibold my-3;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold my-2;
+  }
+
+  h4 {
+    @apply text-xl font-semibold my-2;
+  }
+
+  h5 {
+    @apply text-lg font-semibold my-2;
+  }
+
+  h6 {
+    @apply text-base font-semibold my-1;
+  }
+
+  // Apply styles to paragraphs
+  p {
+    @apply text-base my-2;
+  }
+
+  // Apply styles to ordered and unordered lists
+  ol,
+  ul {
+    @apply list-inside list-disc pl-4;
+  }
+
+  // Apply styles to list items
+  li {
+    @apply my-1;
+  }
+}
+
+// Scroll Button
 .relative {
   position: relative;
 }
@@ -8,23 +76,4 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 50;
-}
-
-::ng-deep .chat-content {
-  pre {
-    @apply bg-base-300;
-    padding: 0.5rem;
-    margin: 0.5rem;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-
-  code {
-    @apply text-base-content;
-  }
-}
-
-::ng-deep .chat-content code:not(pre code) {
-  @apply text-neutral-content;
-  @apply italic;
 }
