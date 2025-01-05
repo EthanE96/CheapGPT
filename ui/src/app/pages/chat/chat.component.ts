@@ -42,13 +42,8 @@ export class ChatComponent {
   ) {}
 
   models$: Observable<Model[]> = this.modelService.getModels();
-  logo$: Observable<string> = this.models$.pipe(
-    map((models) => {
-      const model = models.find((m) => m._id === this.chat?.modelId);
-      return model
-        ? model.logo
-        : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp';
-    })
+  model$: Observable<Model | undefined> = this.models$.pipe(
+    map((models) => models.find((model) => model._id === this.chat?.modelId))
   );
 
   async sendMessage(message: string, newMessage?: boolean) {
