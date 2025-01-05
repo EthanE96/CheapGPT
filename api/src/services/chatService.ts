@@ -1,16 +1,17 @@
 import { Chat } from "../models/chatModel";
 import { newAiMessage } from "./aiChatService";
 import { newAiTitle } from "./aiTitleService";
+import { fetchModel } from "./modelService";
 
 //^ Create Chat
 export const createChat = async (
   userId: string,
-  model: string,
+  modelId: string,
   apiKey: string,
   title?: string
 ): Promise<Chat> => {
   try {
-    const newChat = new Chat({ userId, model, apiKey, title });
+    const newChat = new Chat({ userId, modelId, apiKey, title });
     return await newChat.save();
   } catch (error) {
     console.error(`Error creating chat: ${error}`);
@@ -34,7 +35,10 @@ export const fetchChat = async (
   userId: string
 ): Promise<Chat | null> => {
   try {
-    return await Chat.findById(id, { userId: userId });
+    return await Chat.findOne({
+      _id: id,
+      userId: userId,
+    });
   } catch (error) {
     console.error(`Error getting chat: ${error}`);
     throw error;
@@ -84,39 +88,34 @@ export const updateChat = async (
 //^ Create Message
 // returns updated chat with the new message
 export const createMessage = async (
-  chatId: string,
+  chat: Chat,
   newMessage: string,
   userId: string
 ): Promise<Chat | null> => {
   try {
-    // if chat doesn't exist
-    const chat = await fetchChat(chatId, userId);
-    if (!chat) {
-      throw new Error("Chat not found");
-    }
-
-    // if message is empty
-    if (!newMessage) {
-      throw new Error("Message is empty");
-    }
-
     // if the last message isn't a AI message (should always be, ai can't answer twice)
     const lastMessage = chat.message?.[chat.message.length - 1];
     if (lastMessage && lastMessage.isUser) {
       throw new Error("Last message is not a AI message");
     }
 
+    // get LLM model
+    const model = await fetchModel(chat.modelId);
+    if (!model) {
+      throw new Error("LLM model not found");
+    }
+
     // if new message, add new title
     if (!lastMessage || lastMessage.content !== newMessage) {
-      const title = await newAiTitle(newMessage);
+      const title = await newAiTitle(newMessage, model);
       chat.title = title;
     }
 
     // this function accepts a chat and a new message and returns an updated chat with ai message
-    const updatedChat = await newAiMessage(chat, newMessage);
+    const updatedChat = await newAiMessage(chat, newMessage, model);
 
     // save the updated chat
-    return await updateChat(chatId, updatedChat, userId);
+    return await updateChat(chat._id, updatedChat, userId);
   } catch (error) {
     console.error(`Error creating message: ${error}`);
     throw error;

@@ -15,27 +15,38 @@ import {
 
 //AI
 import { trimmer } from "../ai/ai-config/aiConfig";
-import { getAiModel } from "../ai/ai-config/aiModels";
 import { chatTemplate } from "../ai/ai-config/aiTemplates";
 
 //Models
 import { Chat, Message } from "../models/chatModel";
+import { Model } from "../models/modelModel";
+import { ChatGroq } from "@langchain/groq";
 
+/**
+ * Calls a model with a given input and returns the response
+ * @param {Object} input - an object with a messages property
+ * @returns {Promise<AIMessage>} - the response from the AI model
+ */
 const chatChain = async (
   input: {
     messages: (HumanMessage | AIMessage | SystemMessage)[];
   },
-  model: string
+  model: Model
 ) => {
   // Define the function that calls the model
   const callModel = async (state: typeof MessagesAnnotation.State) => {
-    const newModel = getAiModel(model);
-    const chain = chatTemplate.pipe(newModel);
+    // convert my model into a ChatGroq model
+    const groqModel = new ChatGroq({
+      model: model.modelName,
+    });
+
+    const chain = chatTemplate.pipe(groqModel);
     const trimmedMessage = await trimmer.invoke(state.messages);
 
     const response = await chain.invoke({
       messages: trimmedMessage,
     });
+
     // Update message history with response:
     return { messages: [response] };
   };
@@ -70,9 +81,17 @@ const convertMessages = (
   });
 };
 
+/**
+ * Handles a new message in a chat, and appends the AI's response to the chat.
+ *
+ * @param chat The chat to append the AI's response to
+ * @param newMessage The new message to process
+ * @returns The updated chat with the AI's response
+ */
 export const newAiMessage = async (
   chat: Chat,
-  newMessage: string
+  newMessage: string,
+  model: Model
 ): Promise<Chat> => {
   // Message converter
   chat.message = chat.message || [];
@@ -85,7 +104,7 @@ export const newAiMessage = async (
   };
 
   // Call AI
-  const output = await chatChain(input, "mixtral");
+  const output = await chatChain(input, model);
 
   // Update message history with response
   chat.message.push({

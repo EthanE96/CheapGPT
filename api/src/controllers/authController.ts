@@ -2,12 +2,12 @@ import { Request, Response } from "express";
 
 export const checkAuthStatus = (req: Request, res: Response) => {
   if (req.isAuthenticated()) {
-    res.json({
+    return res.json({
       authenticated: true,
       user: req.user, // This includes the user data from your session
     });
   } else {
-    res.status(401).json({
+    return res.status(401).json({
       authenticated: false,
       message: "Not authenticated",
     });
@@ -17,13 +17,13 @@ export const checkAuthStatus = (req: Request, res: Response) => {
 export const authCallback = (req: Request, res: Response) => {
   try {
     if (req.isAuthenticated()) {
-      res.json({
+      return res.json({
         authenticated: true,
         message: "Authenticated",
         user: req.user,
       });
     } else {
-      res.json({
+      return res.json({
         authenticated: false,
         message: "Unauthenticated",
       });
@@ -38,6 +38,6 @@ export const authLogout = (req: Request, res: Response) => {
     if (err) {
       return res.status(500).json({ message: "Logout failed", error: err });
     }
-    res.json({ message: "Logged out successfully" });
+    return res.json({ message: "Logged out successfully" });
   });
 };

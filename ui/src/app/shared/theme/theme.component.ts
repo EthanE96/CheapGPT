@@ -35,6 +35,7 @@ export class ThemeComponent implements OnInit {
 
     this.setTheme(this.currentTheme);
     this.logo = this.currentLogo();
+    return this.currentTheme;
   }
 
   currentLogo() {

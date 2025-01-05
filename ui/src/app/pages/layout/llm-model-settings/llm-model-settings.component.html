@@ -1,13 +1,10 @@
 <li>
-  <a onclick="my_modal_1.showModal()">LLM Models</a>
+  <a onclick="my_modal_1.showModal()">Default Model</a>
 </li>
 <dialog id="my_modal_1" class="modal">
   <div class="modal-box">
     <form method="dialog">
-      <button
-        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-        (click)="model.value = ''; key.value = ''"
-      >
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
         ✕
       </button>
     </form>
@@ -16,27 +13,30 @@
 
     <div class="flex flex-col gap-4">
       <div>
-        <h3 class="font-bold pb-2">Select AI Model</h3>
-        <select #model class="select select-bordered w-full mx-auto">
-          <option>GPT-4o</option>
-          <option>GPT-4o Mini</option>
+        <select
+          class="select select-bordered w-full mx-auto"
+          [(ngModel)]="selectedModelId"
+        >
+          <option
+            *ngFor="let model of models$ | async"
+            [value]="model.modelName"
+          >
+            {{ model.modelDisplayName }}
+          </option>
         </select>
+        <div class="label">
+          <span class="label-text-alt"
+            >This model will be used by default on all new chats</span
+          >
+        </div>
       </div>
 
       <div>
-        <input
-          #key
-          type="text"
-          placeholder="Enter API Key"
-          class="input input-bordered w-full mx-auto"
-        />
         <div class="modal-action flex-none">
           <form method="dialog">
             <button
               class="btn btn-primary w-full mx-auto"
-              (click)="
-                onSave(model.value, key.value); model.value = ''; key.value = ''
-              "
+              (click)="onSave(selectedModelId)"
             >
               Save
             </button>

@@ -15,6 +15,7 @@ import {
   checkAuthStatus,
 } from "./controllers/authController";
 import { isAuthenticated } from "./middleware/authMiddleware";
+import { getModels } from "./controllers/modelController";
 
 const router = Router();
 
@@ -39,6 +40,9 @@ router.patch("/chats/:id", isAuthenticated, patchChat);
 router.delete("/chats/:id", isAuthenticated, deleteChat);
 router.delete("/chats", isAuthenticated, deleteChats);
 router.post("/chats/:id/messages", isAuthenticated, postMessage);
+
+//* AI Models
+router.get("/ai/models", isAuthenticated, getModels);
 
 //* Authentication
 router.get("/auth/status", checkAuthStatus);
