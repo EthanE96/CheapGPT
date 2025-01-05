@@ -13,7 +13,7 @@ import { marked } from 'marked';
 import { InputComponent } from '../../shared/input/input.component';
 import { NewChatComponent } from './new-chat/new-chat.component';
 import { LucideAngularModule, ArrowDown } from 'lucide-angular';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import { ModelsService } from '../../services/models.service';
 import { Model } from '../../models/model.model';
 
@@ -41,13 +41,21 @@ export class ChatComponent {
     private modelService: ModelsService
   ) {}
 
-  $models: Observable<Model[]> = this.modelService.getModels();
+  models$: Observable<Model[]> = this.modelService.getModels();
+  logo$: Observable<string> = this.models$.pipe(
+    map((models) => {
+      const model = models.find((m) => m._id === this.chat?.modelId);
+      return model
+        ? model.logo
+        : 'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp';
+    })
+  );
 
   async sendMessage(message: string, newMessage?: boolean) {
     // get llm model
     const modelName =
       localStorage.getItem('model') || 'llama-3.3-70b-versatile';
-    const model = (await firstValueFrom(this.$models)).find(
+    const model = (await firstValueFrom(this.models$)).find(
       (m) => m.modelName === modelName
     );
     if (!model || !model._id) {

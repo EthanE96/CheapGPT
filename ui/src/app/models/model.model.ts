@@ -4,6 +4,7 @@ export interface Model {
   modelName: string;
   temperature: number;
   maxTokens?: number;
+  logo: string;
   createdAt: Date;
   updatedAt?: Date;
 }

@@ -7,6 +7,7 @@ export interface Model extends ChatGroq {
   modelName: string;
   temperature: number;
   maxTokens?: number;
+  logo: string;
   createdAt: Date;
   updatedAt?: Date;
 }
@@ -17,6 +18,7 @@ const modelSchema = new Schema<Model>(
     modelName: { type: String, required: true },
     temperature: { type: Number, required: true },
     maxTokens: { type: Number },
+    logo: { type: String, required: false },
   },
   {
     timestamps: true,
