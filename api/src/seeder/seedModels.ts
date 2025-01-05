@@ -17,11 +17,6 @@ const seedData: Model[] = [
     temperature: 0,
   }),
   new Model({
-    modelDisplayName: "Distil-Whisper Large v3",
-    modelName: "distil-whisper-large-v3-en",
-    temperature: 0,
-  }),
-  new Model({
     modelDisplayName: "Mixtral-8x7b",
     modelName: "mixtral-8x7b-32768",
     temperature: 0,
