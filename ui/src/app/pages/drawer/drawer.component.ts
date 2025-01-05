@@ -42,7 +42,6 @@ export class DrawerComponent implements OnInit {
     Promise.resolve().then(() => {
       if (value === true) {
         // chat component created a new chat and message and its
-        console.log('test new message chat in drawer', this.selectedChat); //! REMOVE
         this.loadChats();
         this.newMessageChange.emit(false);
       }

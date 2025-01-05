@@ -13,7 +13,7 @@ import { marked } from 'marked';
 import { InputComponent } from '../../shared/input/input.component';
 import { NewChatComponent } from './new-chat/new-chat.component';
 import { LucideAngularModule, ArrowDown } from 'lucide-angular';
-import { firstValueFrom, Observable } from 'rxjs';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import { ModelsService } from '../../services/models.service';
 import { Model } from '../../models/model.model';
 
@@ -41,13 +41,16 @@ export class ChatComponent {
     private modelService: ModelsService
   ) {}
 
-  $models: Observable<Model[]> = this.modelService.getModels();
+  models$: Observable<Model[]> = this.modelService.getModels();
+  model$: Observable<Model | undefined> = this.models$.pipe(
+    map((models) => models.find((model) => model._id === this.chat?.modelId))
+  );
 
   async sendMessage(message: string, newMessage?: boolean) {
     // get llm model
     const modelName =
       localStorage.getItem('model') || 'llama-3.3-70b-versatile';
-    const model = (await firstValueFrom(this.$models)).find(
+    const model = (await firstValueFrom(this.models$)).find(
       (m) => m.modelName === modelName
     );
     if (!model || !model._id) {

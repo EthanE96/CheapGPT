@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   private baseURL = environment.apiUrl;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
-  $currentUser = this.currentUserSubject.asObservable();
+  currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {}
 
