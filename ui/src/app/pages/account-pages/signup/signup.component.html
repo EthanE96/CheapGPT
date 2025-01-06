@@ -1,30 +1,36 @@
-<div class="flex flex-col items-center justify-center h-screen">
-  <div class="flex flex-row items-center gap-4 pb-6">
-    <img class="w-14 h-14" [src]="logo" alt="CheapGPT Logo" />
-    <h1 class="text-5xl font-bold">CheapGPT</h1>
-  </div>
+<div class="flex flex-col h-screen w-full">
+  <!-- Header -->
+  <app-header [isInfoMode]="true"></app-header>
 
-  <div class="card bg-neutral w-96 shadow-xl">
-    <div class="card-body">
-      <h2 class="card-title text-2xl">Create an Account</h2>
+  <!-- Main Content -->
+  <div class="flex flex-grow justify-center items-center mx-auto mb-20">
+    <div class="card bg-base-300 w-96 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-2xl">Create an Account</h2>
 
-      <div class="flex flex-col gap-4 py-3">
-        <button class="btn" (click)="signupWithGoogle()">
-          <img class="w-5 h-5" src="/google_logo.png" alt="Google Logo" />
-          Sign up with Google
-        </button>
-        <button class="btn" (click)="signupWithGitHub()">
-          <img class="w-5 h-5" src="/github_logo.svg" alt="GitHub Logo" />
-          Sign up with GitHub
-        </button>
-      </div>
+        <div class="flex flex-col gap-4 py-3">
+          <button class="btn btn-neutral" (click)="signupWithGoogle()">
+            <img class="w-5 h-5" src="/google_logo.png" alt="Google Logo" />
+            Sign up with Google
+          </button>
+          <button class="btn btn-neutral" (click)="signupWithGitHub()">
+            <img class="w-5 h-5" src="/github_logo.svg" alt="GitHub Logo" />
+            Sign up with GitHub
+          </button>
+        </div>
 
-      <div class="justify-end pt-2">
-        <p>
-          Already have an account?
-          <span class="link link-primary" routerLink="/login">Sign in</span>
-        </p>
+        <div class="justify-end pt-2">
+          <p>
+            Already have an account?
+            <span class="link link-primary" routerLink="/login">Sign in</span>
+          </p>
+        </div>
       </div>
     </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="w-full bottom-0 fixed">
+    <app-footer></app-footer>
   </div>
 </div>

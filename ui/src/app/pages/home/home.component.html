@@ -1,0 +1,33 @@
+<div class="flex flex-col h-screen w-full">
+  <!-- Header -->
+  <app-header [isInfoMode]="true"></app-header>
+
+  <!-- Main Content -->
+  <div class="grow">
+    <div class="hero w-2/3 mx-auto pt-52">
+      <div class="hero-content flex-col lg:flex-row-reverse">
+        <img
+          src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
+          class="max-w-sm rounded-lg shadow-2xl"
+        />
+        <div>
+          <h1 class="text-5xl font-bold">Accessible LLMs for everyone</h1>
+          <p class="py-6 text-2xl">
+            Our powerful, high-performance LLMs offer lightning-fast responses
+            with a sleek, user-friendly design. Best of all, it’s completely
+            free for everyone.
+          </p>
+          <button class="btn btn-primary text-lg" (click)="onGetStarted()">
+            Get Started
+            <i-lucide [img]="ArrowRight" class="w-5 h-5"></i-lucide>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="w-full bottom-0 fixed">
+    <app-footer></app-footer>
+  </div>
+</div>
