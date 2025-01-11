@@ -28,7 +28,9 @@ export class HeaderComponent {
 
   @Input() isDrawerOpen: boolean = true;
   @Input() isInfoMode: boolean = false;
+  @Input() isThemeDisabled: boolean = false;
   @Output() isDrawerOpenChange = new EventEmitter();
+  @Output() currentThemeChange = new EventEmitter();
 
   currentTheme = this.themeComponent.currentTheme;
   imgTheme = this.currentTheme === 'dark' ? Sun : Moon;
@@ -45,6 +47,7 @@ export class HeaderComponent {
     this.currentTheme = this.themeComponent.toggleTheme();
     this.logo = this.themeComponent.logo;
     this.imgTheme = this.currentTheme === 'dark' ? Sun : Moon;
+    this.currentThemeChange.emit(this.currentTheme);
   }
 
   onLogin() {

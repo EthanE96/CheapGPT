@@ -8,8 +8,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './theme.component.scss',
 })
 export class ThemeComponent implements OnInit {
-  defaultTheme: string = 'dark'; // change default daisyui theme
-  alternateTheme: string = 'bumblebee'; // change alternate daisyui theme
+  defaultTheme: string = 'dark'; //* change default daisyui theme
+  alternateTheme: string = 'emerald'; //* change alternate daisyui theme
   currentTheme: string = this.defaultTheme;
   logo: string = this.currentLogo();
 
@@ -40,10 +40,12 @@ export class ThemeComponent implements OnInit {
 
   currentLogo() {
     if (this.currentTheme === 'dark') {
-      return './cheapgpt_logo_dark.png';
+      return './cheapGPT-logos/cheapgpt_logo_dark.webp';
+    } else if (this.currentTheme === 'emerald') {
+      return './cheapGPT-logos/cheapgpt_logo_emerald.webp';
     } else if (this.currentTheme === 'bumblebee') {
-      return './cheapgpt_logo_bumblebee.png';
+      return './cheapGPT-logos/cheapgpt_logo_bumblebee.webp';
     }
-    return `./cheapgpt_logo_dark.png`;
+    return `./cheapGPT-logos/cheapgpt_logo_dark.webp`;
   }
 }

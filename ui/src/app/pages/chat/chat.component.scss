@@ -1,7 +1,7 @@
 ::ng-deep .chat-content {
   // Code
   pre {
-    @apply bg-base-300 rounded-lg p-4 my-2 overflow-auto relative;
+    @apply bg-base-200 rounded-lg p-4 my-2 overflow-auto relative;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     white-space: pre-wrap;
     word-wrap: break-word;
@@ -14,13 +14,13 @@
   }
 
   code:not(pre code) {
-    @apply text-neutral-content;
+    @apply text-base-content;
     @apply italic;
   }
 
   // Add styles for inline code if needed
   code {
-    @apply px-1 py-0.5 bg-base-300 rounded text-neutral-content;
+    @apply px-1 py-0.5 bg-base-200 rounded text-base-content;
   }
 
   // Apply styles to headers

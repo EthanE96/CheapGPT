@@ -1,17 +1,23 @@
 <!-- Home Page -->
 <ng-container *ngIf="isInfoMode; else chatMode">
-  <div class="navbar flex w-3/4 pt-4 pb-2 mx-auto justify-between">
+  <div
+    class="navbar flex w-3/4 pt-4 pb-2 mx-auto justify-between bg-transparent"
+  >
     <div class="flex gap-3 items-center btn btn-ghost" (click)="onHome()">
       <img class="w-8 h-8" [src]="logo" alt="CheapGPT Logo" />
       <h1 class="text-2xl font-bold">CheapGPT</h1>
     </div>
 
     <div class="flex gap-3">
-      <button class="btn btn-square btn-ghost" (click)="onThemeToggle()">
-        <i-lucide [img]="imgTheme" class="w-5 h-5"></i-lucide>
-      </button>
+      <ng-container *ngIf="!isThemeDisabled">
+        <button class="btn btn-square btn-ghost" (click)="onThemeToggle()">
+          <span><i-lucide [img]="imgTheme" class="w-5 h-5"></i-lucide></span>
+        </button>
+      </ng-container>
 
-      <button class="btn btn-ghost" (click)="onLogin()">Login</button>
+      <button class="btn btn-ghost" (click)="onLogin()">
+        <span>Login</span>
+      </button>
 
       <button class="btn btn-outline btn-primary" (click)="onSignup()">
         Sign Up
@@ -39,11 +45,13 @@
         <h1 class="text-2xl font-bold">CheapGPT</h1>
       </div>
     </div>
-    <div class="flex-none">
-      <button class="btn btn-square btn-ghost" (click)="onThemeToggle()">
-        <i-lucide [img]="imgTheme" class="w-5 h-5"></i-lucide>
-      </button>
-    </div>
+    <ng-container *ngIf="!isThemeDisabled">
+      <div class="flex-none">
+        <button class="btn btn-square btn-ghost" (click)="onThemeToggle()">
+          <i-lucide [img]="imgTheme" class="w-5 h-5"></i-lucide>
+        </button>
+      </div>
+    </ng-container>
     <div class="flex-none dropdown dropdown-end">
       <div tabindex="0" role="button" class="btn btn-ghost rounded-btn">
         <i-lucide [img]="Settings" class="w-5 h-5"></i-lucide>
