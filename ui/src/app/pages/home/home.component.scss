@@ -1,0 +1,18 @@
+:host ::ng-deep {
+  .emerald {
+    h1,
+    p {
+      @apply text-neutral-content;
+    }
+
+    button {
+      span {
+        @apply text-neutral-content;
+      }
+    }
+
+    .divider {
+      @apply before:bg-gray-800 before:opacity-50 after:bg-gray-800 after:opacity-50;
+    }
+  }
+}

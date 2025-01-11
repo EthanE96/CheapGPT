@@ -11,41 +11,7 @@
   <!-- Right Sidebar -->
   <div class="flex-1 flex flex-col h-screen w-full">
     <!-- Header -->
-    <div class="navbar">
-      <div class="flex-1">
-        <ng-container *ngIf="!isDrawerOpen">
-          <button class="btn btn-square btn-ghost" (click)="onDrawerChange()">
-            <i-lucide [img]="PanelLeftOpen" class="w-5 h-5"></i-lucide>
-          </button>
-        </ng-container>
-
-        <div class="flex flex-row items-center gap-3 btn btn-ghost">
-          <img class="w-8 h-8" [src]="logo" alt="CheapGPT Logo" />
-          <h1 class="text-2xl font-bold">CheapGPT</h1>
-        </div>
-      </div>
-      <div class="flex-none">
-        <button class="btn btn-square btn-ghost" (click)="onThemeToggle()">
-          <i-lucide [img]="imgTheme" class="w-5 h-5"></i-lucide>
-        </button>
-      </div>
-      <div class="flex-none dropdown dropdown-end">
-        <div tabindex="0" role="button" class="btn btn-ghost rounded-btn">
-          <i-lucide [img]="Settings" class="w-5 h-5"></i-lucide>
-        </div>
-        <ul
-          tabindex="0"
-          class="menu dropdown-content bg-base-200 rounded-box z-[1] mt-4 w-48 p-2 shadow"
-        >
-          <app-llm-model-settings></app-llm-model-settings>
-
-          <li>
-            <a (click)="onLogout()"> Logout </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
+    <app-header [(isDrawerOpen)]="isDrawerOpen"></app-header>
     <!-- Main Content -->
     <div class="grow">
       <app-chat
@@ -55,6 +21,8 @@
     </div>
 
     <!-- Footer -->
-    <div class="text-center text-sm mb-3"><p>CheapGPT © 2024</p></div>
+    <div class="text-center text-sm mb-3">
+      <p>© Copyright 2024 - 2025, Ethan Edwards. All rights reserved.</p>
+    </div>
   </div>
 </div>

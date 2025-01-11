@@ -19,7 +19,7 @@ app.use(express.json());
 // Allows UI to make requests api from dif domains
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:4200", //TODO: Angular URL
+    origin: process.env.CLIENT_URL, //TODO: Angular URL
     credentials: true,
   })
 );
