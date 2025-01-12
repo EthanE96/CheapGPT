@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.prod';
+import { environment } from '../../environments/environment';
 import { catchError, Observable, shareReplay, throwError } from 'rxjs';
 import { Model } from '../models/model.model';
 

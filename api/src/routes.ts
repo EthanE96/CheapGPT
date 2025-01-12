@@ -71,7 +71,7 @@ router.get(
   passport.authenticate("google", {
     failureRedirect: "/login",
     failureMessage: true,
-    successRedirect: process.env.REDIRECT_URL,
+    successRedirect: process.env.UI_REDIRECT_URL,
   }),
   authCallback
 );
@@ -86,7 +86,7 @@ router.get(
   passport.authenticate("github", {
     failureRedirect: "/login",
     failureMessage: true,
-    successRedirect: process.env.REDIRECT_URL,
+    successRedirect: process.env.UI_REDIRECT_URL,
   }),
   authCallback
 );
