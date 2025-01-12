@@ -30,7 +30,7 @@ export class AuthService {
               this.currentUserSubject.next(response.user);
               // Redirect to the home page if not already (should already)
               if (this.router.url === '/login') {
-                this.router.navigate(['/']);
+                this.router.navigate(['/app']);
               }
               resolve();
             } else {
