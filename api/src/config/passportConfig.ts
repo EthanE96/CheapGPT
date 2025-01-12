@@ -14,7 +14,8 @@ export const passportConfig = () => {
       {
         clientID: process.env.GOOGLE_CLIENT_ID || "",
         clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-        callbackURL: process.env.GOOGLE_CALLBACK_URL || "",
+        callbackURL:
+          `${process.env.API_URL}${process.env.GOOGLE_CALLBACK_ENDPOINT}` || "",
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
@@ -56,7 +57,8 @@ export const passportConfig = () => {
       {
         clientID: process.env.GITHUB_CLIENT_ID || "",
         clientSecret: process.env.GITHUB_CLIENT_SECRET || "",
-        callbackURL: process.env.GITHUB_CALLBACK_URL || "",
+        callbackURL:
+          `${process.env.API_URL}${process.env.GITHUB_CALLBACK_ENDPOINT}` || "",
       },
       async (
         accessToken: string,

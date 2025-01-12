@@ -32,6 +32,17 @@ router.get("/health", (req: Request, res: Response) => {
 });
 
 //^ Private routes
+
+router.get("/api/debug/session", (req, res) => {
+  console.log("Session:", req.session);
+  console.log("User:", req.user);
+  res.json({
+    sessionExists: !!req.session,
+    isAuthenticated: req.isAuthenticated(),
+    user: req.user,
+  });
+});
+
 //* Chat
 router.post("/chats", isAuthenticated, postChat);
 router.get("/chats", isAuthenticated, getChats);

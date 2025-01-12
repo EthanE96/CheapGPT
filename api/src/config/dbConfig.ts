@@ -6,13 +6,16 @@ export const connectDB = async () => {
   const env = process.env.ENV as string;
   let mongoURI = "none";
 
-  if (env == "PRD") {
-    mongoURI = process.env.MONGODB_URI_PRD as string;
-  } else if (env == "STAGE") {
-    mongoURI = process.env.MONGODB_URI_STAGE as string;
-  } else {
-    console.error(`Invalid ENV: ${env}`);
-    process.exit(1);
+  switch (env) {
+    case "PROD":
+      mongoURI = process.env.MONGODB_URI_PROD as string;
+      break;
+    case "DEV":
+      mongoURI = process.env.MONGODB_URI_DEV as string;
+      break;
+    default:
+      console.error(`Invalid ENV: ${env}`);
+      process.exit(1);
   }
 
   try {

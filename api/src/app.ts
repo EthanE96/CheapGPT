@@ -19,8 +19,11 @@ app.use(express.json());
 // Allows UI to make requests api from dif domains
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:4200", //TODO: Angular URL
+    origin: process.env.CLIENT_URL || "http://localhost:4200",
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
+    exposedHeaders: ["set-cookie"],
   })
 );
 
@@ -30,7 +33,12 @@ app.use(
     secret: process.env.SESSION_SECRET || "your_secret_key",
     resave: false,
     saveUninitialized: false,
-    cookie: { httpOnly: true, secure: false }, //TODO: Change to true in production with HTTPS
+    cookie: {
+      httpOnly: true,
+      secure: process.env.ENV === "PROD", // true in production
+      sameSite: process.env.ENV === "PROD" ? "none" : "lax",
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    },
   })
 );
 
