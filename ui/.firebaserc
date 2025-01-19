@@ -1,8 +1,0 @@
-{
-  "projects": {
-    "default": "cheapgpt-470a0",
-    "production": "cheapgpt-470a0"
-  },
-  "targets": {},
-  "etags": {}
-}

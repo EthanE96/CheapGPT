@@ -6,10 +6,10 @@
     "watch": "ng serve",
     "build": "ng build  --configuration local",
     "test": "ng test",
-    "build:dev": "ng build --configuration development --output-path dist/development",
-    "deploy:dev": "npm run build:dev && firebase deploy --only hosting:development",
-    "build:prod": "ng build --configuration production --output-path dist/production",
-    "deploy:prod": "npm run build:prod && firebase deploy --only hosting:production"
+    "build:dev": "",
+    "deploy:dev": "",
+    "build:prod": "",
+    "deploy:prod": ""
   },
   "private": true,
   "dependencies": {
