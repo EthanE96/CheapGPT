@@ -5,7 +5,11 @@
   "scripts": {
     "start": "node dist/server.js",
     "watch": "nodemon src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "deploy:dev": "flyctl deploy --config fly.dev.toml",
+    "logs:dev": "flyctl logs --app api-cheapgpt-dev",
+    "deploy:prod": "flyctl deploy --config fly.toml",
+    "logs:prod": "flyctl logs --app api-cheapgpt-prod"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,25 @@
+#Unhidden API ENV Vars
+ENV=DEV/PROD
+PORT=3000
+API_URL=Basic url
+UI_URL=Basic url
+UI_REDIRECT_URL=basic url/app
+GOOGLE_CALLBACK_ENDPOINT=/api/auth/callback/google
+GITHUB_CALLBACK_ENDPOINT=/api/auth/callback/github
+
+#DB
+MONGODB_URI=
+
+#AI Keys
+GROQ_API_KEY=
+
+#Google Auth
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
+#Github Auth
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+
+#Session Secret
+SESSION_SECRET=
