@@ -4,7 +4,7 @@ export const checkAuthStatus = (req: Request, res: Response) => {
   if (req.isAuthenticated()) {
     return res.json({
       authenticated: true,
-      user: req.user, // This includes the user data from your session
+      user: req.user, // This includes the user data from session
     });
   } else {
     return res.status(401).json({

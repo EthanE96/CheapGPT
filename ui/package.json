@@ -3,12 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "watch": "ng serve --configuration development",
-    "build": "ng build  --configuration development",
-    "watch:stage": "ng serve --configuration staging",
-    "build:stage": "ng build  --configuration staging",
-    "watch:prd": "ng serve --configuration production",
-    "build:prd": "ng build  --configuration production",
+    "watch": "ng serve",
+    "build": "ng build  --configuration production",
     "test": "ng test"
   },
   "private": true,
