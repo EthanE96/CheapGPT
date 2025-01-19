@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for api-cheapgpt-prod on 2025-01-11T17:21:47-07:00
+# fly.toml app configuration file generated for api-cheapgpt-dev on 2025-01-18T19:01:00-07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'api-cheapgpt-prod'
+app = 'api-cheapgpt-dev'
 primary_region = 'iad'
 
 [build]
@@ -21,11 +21,12 @@ memory = '512mb'
 cpu_kind = 'shared'
 cpus = 1
 
+
 [env]
-ENV = 'PROD'
+ENV = 'DEV'
 PORT = '3000'
-API_URL = 'https://api-cheapgpt-prod.fly.dev'
+API_URL = 'https://api-cheapgpt-dev.fly.dev'
 UI_URL = 'https://cheapgpt-470a0.web.app'
 UI_REDIRECT_URL = 'https://cheapgpt-470a0.web.app/app'
-GOOGLE_CALLBACK_ENDPOINT = '/api/auth/callback/google'
 GITHUB_CALLBACK_ENDPOINT = '/api/auth/callback/github'
+GOOGLE_CALLBACK_ENDPOINT = '/api/auth/callback/google'

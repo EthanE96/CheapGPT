@@ -1,0 +1,32 @@
+name: Deploy to Development
+on:
+  # Trigger the workflow on merge to main or a push to main branch.
+  push:
+    branches:
+      - main
+    paths:
+      - "api/**" # Only trigger when files in the ./api directory are changed.
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  FLY_REGION: iad
+  FLY_ORG: cheapgpt
+
+jobs:
+  deploy_api:
+    runs-on: ubuntu-latest
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
+    concurrency:
+      # Only allow one deployment at a time on `main`.
+      group: main-deployment
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Deploy DEV API to Fly.io
+        id: deploy
+        uses: superfly/fly-pr-review-apps@1.2.1
+        with:
+          config: ./api/fly.dev.toml
