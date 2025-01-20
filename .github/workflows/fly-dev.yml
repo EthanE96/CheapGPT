@@ -1,4 +1,4 @@
-name: Deploy to Development
+name: Fly.io Development Deploy
 on:
   # Trigger the workflow on merge to main or a push to main branch.
   push:

@@ -7,9 +7,7 @@
     "build": "ng build  --configuration local",
     "test": "ng test",
     "build:dev": "ng build  --configuration development",
-    "deploy:dev": "",
-    "build:prod": "ng build  --configuration production",
-    "deploy:prod": ""
+    "build:prod": "ng build  --configuration production"
   },
   "private": true,
   "dependencies": {
