@@ -1,0 +1,21 @@
+{
+  "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+  "configurations": {
+    "dev": {
+      "appLocation": ".",
+      "outputLocation": "dist/ui/browser",
+      "appBuildCommand": "npm run build:dev",
+      "run": "npm run watch",
+      "appName": "ui-cheapgpt",
+      "resourceGroup": "cheapgpt"
+    },
+    "prod": {
+      "appLocation": ".",
+      "outputLocation": "dist/ui/browser",
+      "appBuildCommand": "npm run build:prod",
+      "run": "npm run watch",
+      "appName": "ui-cheapgpt",
+      "resourceGroup": "cheapgpt"
+    }
+  }
+}
