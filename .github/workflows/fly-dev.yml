@@ -1,4 +1,4 @@
-name: Fly.io Development Deploy
+name: Fly.io Development Deployment
 # On push to "main" branch, build and deploy to Fly.io Development
 
 on:
