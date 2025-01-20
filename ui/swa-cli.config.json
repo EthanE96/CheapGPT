@@ -1,0 +1,12 @@
+{
+  "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+  "configurations": {
+    "production": {
+      "appLocation": ".",
+      "outputLocation": "dist/prod",
+      "appBuildCommand": "npm run build:prod",
+      "run": "npm run watch",
+      "appDevserverUrl": "http://localhost:4200"
+    }
+  }
+}
