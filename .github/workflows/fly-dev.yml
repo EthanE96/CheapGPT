@@ -1,11 +1,12 @@
 name: Fly.io Development Deploy
+# On push to "main" branch, build and deploy to Fly.io Development
+
 on:
-  # Trigger the workflow on merge to main or a push to main branch.
   push:
     branches:
       - main
     paths:
-      - "api/**" # Only trigger when files in the ./api directory are changed.
+      - "api/**"
 
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

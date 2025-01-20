@@ -35,7 +35,6 @@
           },
           "configurations": {
             "local": {
-              "outputPath": "dist/local",
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -47,7 +46,6 @@
               ]
             },
             "development": {
-              "outputPath": "dist/dev",
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
@@ -59,7 +57,6 @@
               ]
             },
             "production": {
-              "outputPath": "dist/prod",
               "budgets": [
                 {
                   "type": "initial",
