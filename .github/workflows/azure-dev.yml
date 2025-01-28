@@ -33,7 +33,7 @@ jobs:
       - name: Install dependencies
         run: |
           cd ui
-          npm ci
+          npm install
           npm install -g @azure/static-web-apps-cli
 
       # App is prebuilt with swa deploy
