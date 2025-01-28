@@ -41,6 +41,7 @@ jobs:
         run: |
           cd ui
           npm run build:dev
+          ls -la dist/ui/browser
 
       # Deploy to Azure using SWA CLI
       - name: Deploy using SWA CLI
