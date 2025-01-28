@@ -36,15 +36,15 @@ jobs:
           npm install
           npm install -g @azure/static-web-apps-cli
 
-      # App is prebuilt with swa deploy
-
-      - name: List files in ui directory (after build)
+      # Build app
+      - name: Build app
         run: |
           cd ui
-          ls -lR
+          npm run build:dev
 
       # Deploy to Azure using SWA CLI
       - name: Deploy using SWA CLI
         run: |
           cd ui
           swa deploy dev --env dev --deployment-token ${{ secrets.AZURE_DEPLOYMENT_ACCESS_TOKEN }}
+      # swa deploy `config name` --env `swa preview name`  --deployment-token `token`

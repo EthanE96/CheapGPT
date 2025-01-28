@@ -3,7 +3,7 @@
   "configurations": {
     "dev": {
       "appLocation": "dist/ui",
-      "outputLocation": "/dist/ui",
+      "outputLocation": ".",
       "appBuildCommand": "npm run build:dev",
       "run": "npm run watch",
       "appName": "ui-cheapgpt",
@@ -11,7 +11,7 @@
     },
     "prod": {
       "appLocation": "dist/ui",
-      "outputLocation": "/dist/ui",
+      "outputLocation": ".",
       "appBuildCommand": "npm run build:prod",
       "run": "npm run watch",
       "appName": "ui-cheapgpt",
