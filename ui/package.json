@@ -7,8 +7,8 @@
     "build": "ng build  --configuration local",
     "test": "ng test",
     "build:dev": "ng build  --configuration development",
-    "deploy:dev": "swa deploy dev --env dev",
     "build:prod": "ng build  --configuration production",
+    "deploy:dev": "swa deploy dev --env dev",
     "deploy:prod": "swa deploy prod"
   },
   "private": true,

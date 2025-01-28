@@ -17,13 +17,31 @@ on:
 jobs:
   Deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Run deploy:dev
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.X"
+
+      # Install npm dependencies
+      - name: Install dependencies
         run: |
           cd ui
-          npm run deploy:dev
+          npm ci
+          npm install -g @azure/static-web-apps-cli
+
+      # App is prebuilt with swa deploy
+
+      # Deploy to Azure using SWA CLI
+      - name: Deploy using SWA CLI
+        run: |
+          cd ui
+          swa deploy dev --env dev
         env:
           AZURE_ACCESS_TOKEN: ${{ secrets.AZURE_DEPLOYMENT_ACCESS_TOKEN }}
