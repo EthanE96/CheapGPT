@@ -38,6 +38,11 @@ jobs:
 
       # App is prebuilt with swa deploy
 
+      - name: List files in ui directory (after build)
+        run: |
+          cd ui
+          ls -lR
+
       # Deploy to Azure using SWA CLI
       - name: Deploy using SWA CLI
         run: |
