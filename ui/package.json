@@ -8,8 +8,8 @@
     "test": "ng test",
     "build:dev": "ng build  --configuration development",
     "build:prod": "ng build  --configuration production",
-    "deploy:dev": "swa deploy dev --env dev",
-    "deploy:prod": "swa deploy prod"
+    "deploy:dev": "npm run build:dev && swa deploy dev --env dev",
+    "deploy:prod": "npm run build:prod && swa deploy prod"
   },
   "private": true,
   "dependencies": {
