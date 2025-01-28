@@ -42,6 +42,4 @@ jobs:
       - name: Deploy using SWA CLI
         run: |
           cd ui
-          swa deploy dev --env dev
-        env:
-          AZURE_ACCESS_TOKEN: ${{ secrets.AZURE_DEPLOYMENT_ACCESS_TOKEN }}
+          swa deploy dev --env dev --deployment-token ${{ secrets.AZURE_DEPLOYMENT_ACCESS_TOKEN }}
