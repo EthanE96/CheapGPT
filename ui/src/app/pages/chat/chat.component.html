@@ -1,3 +1,11 @@
+<!-- Error toast -->
+<div *ngIf="errorMessage" class="toast toast-top toast-center z-50">
+  <div class="alert alert-error shadow-lg max-w-md">
+    <span>{{ errorMessage }}</span>
+    <button class="btn btn-sm btn-ghost" (click)="errorMessage = null">✕</button>
+  </div>
+</div>
+
 <ng-container *ngIf="chat?.message?.length; else newChat">
   <div class="flex flex-col w-3/4 mx-auto" style="height: 90vh">
     <div class="flex-none h-10"></div>

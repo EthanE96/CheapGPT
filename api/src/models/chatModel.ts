@@ -61,6 +61,9 @@ const chatSchema = new Schema<Chat>(
   }
 );
 
+// Index for fetching a user's chats sorted by most recently updated
+chatSchema.index({ userId: 1, updatedAt: -1 });
+
 // Middleware to calculate cost
 
 //! Comment out, as Groq does disclose cost per token.

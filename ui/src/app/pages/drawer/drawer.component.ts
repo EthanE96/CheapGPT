@@ -140,6 +140,9 @@ export class DrawerComponent implements OnInit {
         next: (chats) => {
           this.chats = chats;
         },
+        error: (error: HttpErrorResponse) => {
+          console.error('Failed to load chats:', error.status, error.message);
+        },
       });
   }
 }

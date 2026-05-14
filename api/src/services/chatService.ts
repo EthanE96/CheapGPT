@@ -75,10 +75,11 @@ export const updateChat = async (
   userId: string
 ): Promise<Chat | null> => {
   try {
-    return await Chat.findByIdAndUpdate(id, update, {
-      new: true,
-      userId: userId,
-    });
+    return await Chat.findOneAndUpdate(
+      { _id: id, userId: userId },
+      update,
+      { new: true }
+    );
   } catch (error) {
     console.error(`Error updating chat: ${error}`);
     throw error;
