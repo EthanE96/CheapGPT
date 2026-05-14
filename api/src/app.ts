@@ -13,7 +13,8 @@ const app = express();
 
 // Connect to MongoDB
 const mongoURI = process.env.MONGODB_URI as string;
-connectDB(mongoURI);
+const mongoDBName = process.env.MONGODB_DB_NAME;
+connectDB(mongoURI, mongoDBName);
 
 // Trust proxy, before middleware
 app.set("trust proxy", 1);
@@ -48,7 +49,7 @@ app.use(
     secret: process.env.SESSION_SECRET || "your_secret_key",
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: mongoURI }),
+    store: MongoStore.create({ mongoUrl: mongoURI, dbName: mongoDBName }),
     cookie: {
       httpOnly: true,
       secure: true,
