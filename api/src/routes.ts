@@ -10,7 +10,6 @@ import {
   patchChat,
 } from "./controllers/chatController";
 import {
-  authCallback,
   authLogout,
   checkAuthStatus,
 } from "./controllers/authController";
@@ -60,9 +59,13 @@ router.get(
   passport.authenticate("google", {
     failureRedirect: "/login",
     failureMessage: true,
-    successRedirect: process.env.UI_REDIRECT_URL,
   }),
-  authCallback
+  (req: Request, res: Response, next) => {
+    req.session.save((err) => {
+      if (err) return next(err);
+      res.redirect(process.env.UI_REDIRECT_URL!);
+    });
+  }
 );
 
 // Github
@@ -75,9 +78,13 @@ router.get(
   passport.authenticate("github", {
     failureRedirect: "/login",
     failureMessage: true,
-    successRedirect: process.env.UI_REDIRECT_URL,
   }),
-  authCallback
+  (req: Request, res: Response, next) => {
+    req.session.save((err) => {
+      if (err) return next(err);
+      res.redirect(process.env.UI_REDIRECT_URL!);
+    });
+  }
 );
 
 export default router;

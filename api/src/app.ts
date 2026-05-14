@@ -3,13 +3,14 @@ import cors from "cors";
 import session from "express-session";
 import morgan from "morgan";
 import passport from "passport";
-import MongoStore from "../node_modules/connect-mongo/build/main/index";
+import MongoStore from "connect-mongo";
 import { connectDB } from "./config/dbConfig";
 import routes from "./routes";
 import { passportConfig } from "./config/passportConfig";
 import { seedModels } from "./seeder/seedModels";
 
 const app = express();
+const isProd = process.env.ENV === "PROD";
 
 // Connect to MongoDB
 const mongoURI = process.env.MONGODB_URI as string;
@@ -52,8 +53,8 @@ app.use(
     store: MongoStore.create({ mongoUrl: mongoURI, dbName: mongoDBName }),
     cookie: {
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours,
     },
   })
