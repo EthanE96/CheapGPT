@@ -7,11 +7,18 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Chat, StreamEvent } from '../../models/chat.model';
-import { ChatService } from '../../services/chat.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import { marked } from 'marked';
 import { markedHighlight } from 'marked-highlight';
 import hljs from 'highlight.js';
+import { Chat, StreamEvent } from '../../models/chat.model';
+import { ChatService } from '../../services/chat.service';
+import { InputComponent } from '../../shared/input/input.component';
+import { NewChatComponent } from './new-chat/new-chat.component';
+import { LucideAngularModule, ArrowDown } from 'lucide-angular';
+import { ModelsService } from '../../services/models.service';
+import { Model } from '../../models/model.model';
 
 marked.use(
   markedHighlight({
@@ -23,13 +30,6 @@ marked.use(
     },
   }),
 );
-import { InputComponent } from '../../shared/input/input.component';
-import { NewChatComponent } from './new-chat/new-chat.component';
-import { LucideAngularModule, ArrowDown } from 'lucide-angular';
-import { firstValueFrom, map, Observable } from 'rxjs';
-import { ModelsService } from '../../services/models.service';
-import { Model } from '../../models/model.model';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-chat',
