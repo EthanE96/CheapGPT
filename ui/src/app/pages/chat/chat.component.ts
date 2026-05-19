@@ -38,25 +38,33 @@ export class ChatComponent {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   errorMessage: string | null = null;
+  isAtBottom = true;
   private errorTimer: ReturnType<typeof setTimeout> | null = null;
+  private programmaticScroll = false;
 
   constructor(
     private chatService: ChatService,
-    private modelService: ModelsService
+    private modelService: ModelsService,
   ) {}
 
   models$: Observable<Model[]> = this.modelService.getModels();
   model$: Observable<Model | undefined> = this.models$.pipe(
-    map((models) => models.find((model) => model._id === this.chat?.modelId))
+    map((models) => models.find((model) => model._id === this.chat?.modelId)),
   );
 
-  async sendMessage(message: string, newMessage?: boolean) {
+  async sendMessage(
+    message: string,
+    newMessage?: boolean,
+    modelNameOverride?: string,
+  ) {
     try {
       // get llm model
       const modelName =
-        localStorage.getItem('model') || 'llama-3.3-70b-versatile';
+        modelNameOverride ||
+        localStorage.getItem('model') ||
+        'llama-3.3-70b-versatile';
       const model = (await firstValueFrom(this.models$)).find(
-        (m) => m.modelName === modelName
+        (m) => m.modelName === modelName,
       );
       if (!model || !model._id) {
         throw new Error('Model not found');
@@ -68,7 +76,7 @@ export class ChatComponent {
           this.chatService.postChat({
             modelId: model._id,
             message: [],
-          })
+          }),
         );
       }
 
@@ -85,7 +93,7 @@ export class ChatComponent {
 
       // post message
       this.chat = await firstValueFrom(
-        this.chatService.postMessage(this.chat._id, message)
+        this.chatService.postMessage(this.chat._id, message),
       );
       this.scrollToBottom();
 
@@ -101,13 +109,17 @@ export class ChatComponent {
   }
 
   private extractErrorMessage(error: unknown): string {
-    const body = (error as HttpErrorResponse)?.error?.error as string | undefined;
+    const body = (error as HttpErrorResponse)?.error?.error as
+      | string
+      | undefined;
     if (body) {
       try {
         const jsonStr = body.substring(body.indexOf('{'));
         const parsed = JSON.parse(jsonStr);
         if (parsed?.error?.message) return parsed.error.message;
-      } catch { /* fall through */ }
+      } catch {
+        /* fall through */
+      }
       return body;
     }
     return 'Something went wrong. Please try again.';
@@ -123,10 +135,19 @@ export class ChatComponent {
     return marked(message);
   }
 
+  onScroll() {
+    if (this.programmaticScroll) return;
+    const el = this.scrollContainer.nativeElement;
+    this.isAtBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 20;
+  }
+
   scrollToBottom() {
+    this.isAtBottom = true;
+    this.programmaticScroll = true;
     setTimeout(() => {
-      this.scrollContainer.nativeElement.scrollTop =
-        this.scrollContainer.nativeElement.scrollHeight;
+      const el = this.scrollContainer.nativeElement;
+      el.scrollTop = el.scrollHeight;
+      setTimeout(() => (this.programmaticScroll = false), 400);
     }, 100);
   }
 }

@@ -13,7 +13,7 @@
     <!-- Header -->
     <app-header [(isDrawerOpen)]="isDrawerOpen"></app-header>
     <!-- Main Content -->
-    <div class="grow">
+    <div class="grow overflow-hidden">
       <app-chat
         [chat]="selectedChat"
         (newMessage)="onNewMessage($event)"
@@ -21,8 +21,10 @@
     </div>
 
     <!-- Footer -->
-    <div class="text-center text-sm mb-3">
-      <p>© Copyright 2024 - 2025, Ethan Edwards. All rights reserved.</p>
+    <div *ngIf="!selectedChat" class="flex-none pb-2">
+      <p class="text-center text-xs opacity-60">
+        © Copyright 2024 - 2026, Ethan Edwards. All rights reserved.
+      </p>
     </div>
   </div>
 </div>

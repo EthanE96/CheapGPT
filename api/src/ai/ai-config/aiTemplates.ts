@@ -17,5 +17,5 @@ export const getChatTemplate = (model: Model) => {
 };
 
 export const titleTemplate = PromptTemplate.fromTemplate(
-  "You are my title maker. You will analyze the message provided and create a very short and concise title for the chat. Use as few words as possible and NEVER more than one sentence. Never include periods. Here is the message: {title}"
+  "You are my title maker. You will analyze the message provided and create a very short and concise title for the chat. Use as few words as possible and NEVER more than one sentence. Never include periods. Here is the message: {title}",
 );

@@ -7,9 +7,9 @@
     (keyup.enter)="sendValue(input.value); input.value = ''"
   />
   <button
-    class="btn btn-primary"
+    class="btn btn-primary btn-square"
     (click)="sendValue(input.value); input.value = ''"
   >
-    Send
+    <i-lucide [img]="Send" class="w-5 h-5"></i-lucide>
   </button>
 </div>

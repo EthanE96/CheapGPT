@@ -1,4 +1,5 @@
 import express, { Request, Response } from "express";
+import dotenv from "dotenv";
 import path from "path";
 import cors from "cors";
 import session from "express-session";
@@ -10,13 +11,17 @@ import routes from "./routes";
 import { passportConfig } from "./config/passportConfig";
 import { seedModels } from "./seeder/seedModels";
 
+dotenv.config();
+
 const app = express();
 const isProd = process.env.ENV === "PROD";
+const PORT = process.env.PORT || 3000;
+const URL = process.env.API_URL || "http://localhost:3000";
 
 // Connect to MongoDB
 const mongoURI = process.env.MONGODB_URI as string;
 const mongoDBName = process.env.MONGODB_DB_NAME;
-connectDB(mongoURI, mongoDBName);
+connectDB(mongoURI, mongoDBName).then(() => seedModels());
 
 // Trust proxy, before middleware
 app.set("trust proxy", 1);
@@ -42,7 +47,7 @@ app.use(
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "Cookie"],
     exposedHeaders: ["Set-Cookie"],
-  })
+  }),
 );
 
 // Session Management
@@ -58,7 +63,7 @@ app.use(
       sameSite: isProd ? "none" : "lax",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours,
     },
-  })
+  }),
 );
 
 // Initialize Passport and use it with the session
@@ -72,9 +77,6 @@ morgan.token("body", (req: Request) => {
 });
 app.use(morgan(":method :url :status - :response-time ms body:body"));
 
-// Seed data
-seedModels();
-
 // Routes
 app.use("/api", routes);
 
@@ -86,4 +88,6 @@ app.get("*", (_req, res: Response) => {
   res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
-export default app;
+app.listen(PORT, () => {
+  console.log(`Server is running ${URL}/api`);
+});

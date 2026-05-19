@@ -5,39 +5,56 @@ const prompt: string =
 
 const seedData: Model[] = [
   new Model({
-    modelDisplayName: "Llama 3.1-8b Instance",
+    modelDisplayName: "Llama 3.1 8B",
     modelName: "llama-3.1-8b-instant",
     temperature: 0.5,
     systemPrompt: prompt,
-    logo: "/model-logos/meta.png",
+    logo: "/model-logos/meta.webp",
   }),
   new Model({
-    modelDisplayName: "Llama 3.3-70b Versatile",
+    modelDisplayName: "Llama 3.3 70B",
     modelName: "llama-3.3-70b-versatile",
     temperature: 0.5,
     systemPrompt: prompt,
-    logo: "/model-logos/meta.png",
+    logo: "/model-logos/meta.webp",
   }),
   new Model({
-    modelDisplayName: "Gemma2-9b",
-    modelName: "gemma2-9b-it",
+    modelDisplayName: "GPT OSS 120B",
+    modelName: "openai/gpt-oss-120b",
     temperature: 0.5,
     systemPrompt: prompt,
-    logo: "/google_logo.png",
+    logo: "/model-logos/openAI.svg",
   }),
   new Model({
-    modelDisplayName: "Mixtral-8x7b",
-    modelName: "mixtral-8x7b-32768",
+    modelDisplayName: "GPT OSS 20B",
+    modelName: "openai/gpt-oss-20b",
     temperature: 0.5,
     systemPrompt: prompt,
-    logo: "/model-logos/mistral.png",
+    logo: "/model-logos/openAI.svg",
+  }),
+  new Model({
+    modelDisplayName: "Compound",
+    modelName: "groq/compound",
+    temperature: 0.5,
+    systemPrompt: prompt,
+    logo: "/model-logos/groq.webp",
+  }),
+  new Model({
+    modelDisplayName: "Compound Mini",
+    modelName: "groq/compound-mini",
+    temperature: 0.5,
+    systemPrompt: prompt,
+    logo: "/model-logos/groq.webp",
   }),
 ];
 
 export const seedModels = async () => {
+  console.log("Seeding models...");
   const existingModels = await Model.find({});
   if (existingModels.length === 0) {
-    console.log("Seeding models");
     await Model.insertMany(seedData);
+    console.log("Models seeded");
+  } else {
+    console.log(`Models already seeded (${existingModels.length} found)`);
   }
 };
