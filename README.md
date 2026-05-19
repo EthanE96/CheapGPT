@@ -1,5 +1,9 @@
+# CheapGPT
+
+---
+
 <p align="center">
-    <h1 style="text-align: center;">CheapGPT</h1>
+   <img src="ui/public/cheapGPT-logos/cheapgpt_logo_dark.webp" alt="CheapGPT Logo" width="120"/>
 </p>
 
 <p align="center">
@@ -136,10 +140,10 @@ npm run watch
 
 ## Monorepo Structure
 
-| Folder | Description                                        |
-| ------ | -------------------------------------------------- |
+| Folder | Description                                          |
+| ------ | ---------------------------------------------------- |
 | `api/` | Node.js/TypeScript API, LangChain, MongoDB, Passport |
-| `ui/`  | Angular SPA, Tailwind, DaisyUI, marked             |
+| `ui/`  | Angular SPA, Tailwind, DaisyUI, marked               |
 
 ---
 
