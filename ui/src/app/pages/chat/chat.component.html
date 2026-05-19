@@ -8,6 +8,9 @@
   </div>
 </div>
 
+<!-- TODO: The markdown response from the LLM, if it includes a table should be formated as a table that matches the style / color mode of the theme  -->
+<!-- Maybe include a markdown library that exists to format our chat messages perfeltly? So it would look like chatgpt -->
+
 <ng-container *ngIf="chat?.message?.length; else newChat">
   <div class="flex flex-col w-5/6 mx-auto" style="height: 90vh">
     <div class="flex-none h-10"></div>
@@ -46,12 +49,17 @@
             </div>
           </ng-container>
         </div>
-        <!-- Loading Icon -->
-        <div
-          *ngIf="chat.message.slice(-1)[0]?.isUser"
-          class="chat-bubble bg-neutral text-neutral-content"
-        >
-          <span class="loading loading-dots loading-sm"></span>
+        <!-- Streaming bubble -->
+        <div *ngIf="isStreaming" class="chat chat-start py-2 text-sm">
+          <div class="chat-image">
+            <div class="w-10 rounded-full">
+              <img [src]="(model$ | async)?.logo" />
+            </div>
+          </div>
+          <div
+            class="chat-content chat-bubble bg-neutral text-neutral-content text-xs"
+            [innerHTML]="toHTML(streamingContent || '&nbsp;')"
+          ></div>
         </div>
       </ng-container>
     </div>

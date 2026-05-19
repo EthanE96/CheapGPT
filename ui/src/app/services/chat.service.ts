@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Chat } from '../models/chat.model';
+import { Chat, StreamEvent } from '../models/chat.model';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../environments/environment.dev';
 import { catchError, Observable, throwError } from 'rxjs';
@@ -76,6 +76,61 @@ export class ChatService {
         withCredentials: true,
       })
       .pipe(catchError(this.handleError));
+  }
+
+  //^ Stream Message
+  streamMessage(chatId: string, message: string): Observable<StreamEvent> {
+    return new Observable<StreamEvent>((subscriber) => {
+      const controller = new AbortController();
+
+      fetch(`${this.baseURL}/chats/${chatId}/messages/stream`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: message }),
+        credentials: 'include',
+        signal: controller.signal,
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            const body = await response.json().catch(() => ({}));
+            subscriber.error(body?.error ?? 'Stream request failed');
+            return;
+          }
+          const reader = response.body!.getReader();
+          const decoder = new TextDecoder();
+          let buffer = '';
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              buffer += decoder.decode(value, { stream: true });
+              const frames = buffer.split('\n\n');
+              buffer = frames.pop()!;
+              for (const frame of frames) {
+                if (!frame.startsWith('data: ')) continue;
+                try {
+                  const event = JSON.parse(frame.slice(6)) as StreamEvent;
+                  subscriber.next(event);
+                  if (event.type === 'done' || event.type === 'error') {
+                    subscriber.complete();
+                    return;
+                  }
+                } catch { /* skip malformed frame */ }
+              }
+            }
+          } catch (err) {
+            if ((err as Error).name !== 'AbortError') subscriber.error(err);
+          } finally {
+            reader.releaseLock();
+            subscriber.complete();
+          }
+        })
+        .catch((err) => {
+          if (err.name !== 'AbortError') subscriber.error(err);
+        });
+
+      return () => controller.abort();
+    });
   }
 
   //* Error Handling

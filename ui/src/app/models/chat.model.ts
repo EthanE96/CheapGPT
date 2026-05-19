@@ -20,3 +20,8 @@ export interface Tokens {
   promptTokens: number;
   completionTokens: number;
 }
+
+export type StreamEvent =
+  | { type: 'chunk'; content: string }
+  | { type: 'done'; chat: Chat }
+  | { type: 'error'; message: string };

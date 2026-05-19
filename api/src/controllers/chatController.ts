@@ -8,6 +8,9 @@ import {
   removeChats,
   updateChat,
 } from "../services/chatService";
+import { streamAiMessage } from "../services/aiChatService";
+import { fetchModel } from "../services/modelService";
+import { newAiTitle } from "../services/aiTitleService";
 import { User } from "../models/userModel";
 
 //^ Post Chat
@@ -116,6 +119,93 @@ export const postMessage = async (req: Request, res: Response) => {
     return res.status(200).json(updatedChat);
   } catch (error) {
     return res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+//^ Post Message (Streaming)
+export const postMessageStream = async (req: Request, res: Response) => {
+  try {
+    if (!req.body.content) {
+      return res.status(400).json({ error: "Message content is required" });
+    }
+    const userID = getUserId(req);
+    const chat = await fetchChat(req.params.id, userID);
+    if (!chat) return res.status(404).json({ error: "Chat not found" });
+
+    const model = await fetchModel(chat.modelId);
+    if (!model) return res.status(404).json({ error: "Model not found" });
+
+    // Fire-and-forget title generation (same condition as createMessage)
+    const lastMessage = chat.message?.[chat.message.length - 1];
+    if (!lastMessage || lastMessage.content !== req.body.content) {
+      newAiTitle(req.body.content, model)
+        .then((title) => {
+          chat.title = title;
+        })
+        .catch(() => {});
+    }
+
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+    res.flushHeaders();
+
+    const send = (data: object) =>
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
+
+    let fullContent = "";
+    let finalTokens: any = {
+      totalTokens: 0,
+      promptTokens: 0,
+      completionTokens: 0,
+    };
+
+    try {
+      for await (const event of streamAiMessage(
+        chat,
+        req.body.content,
+        model,
+      )) {
+        if (event.type === "chunk") {
+          fullContent += event.content;
+          send(event);
+        } else if (event.type === "done") {
+          finalTokens = event.tokens;
+        }
+      }
+
+      chat.message!.push({
+        content: fullContent,
+        isUser: false,
+        tokens: finalTokens,
+      });
+      if (!chat.totalTokens) {
+        chat.totalTokens = {
+          totalTokens: 0,
+          promptTokens: 0,
+          completionTokens: 0,
+        };
+      }
+      chat.totalTokens.totalTokens += finalTokens.totalTokens;
+      chat.totalTokens.promptTokens += finalTokens.promptTokens;
+      chat.totalTokens.completionTokens += finalTokens.completionTokens;
+
+      const updatedChat = await updateChat(chat._id, chat, userID);
+      send({ type: "done", chat: updatedChat });
+    } catch (err) {
+      send({ type: "error", message: (err as Error).message });
+    } finally {
+      res.end();
+    }
+  } catch (error) {
+    if (res.headersSent) {
+      res.write(
+        `data: ${JSON.stringify({ type: "error", message: (error as Error).message })}\n\n`,
+      );
+      res.end();
+    } else {
+      res.status(500).json({ error: (error as Error).message });
+    }
   }
 };
 

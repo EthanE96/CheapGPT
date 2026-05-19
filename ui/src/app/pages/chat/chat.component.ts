@@ -7,7 +7,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { Chat } from '../../models/chat.model';
+import { Chat, StreamEvent } from '../../models/chat.model';
 import { ChatService } from '../../services/chat.service';
 import { marked } from 'marked';
 import { InputComponent } from '../../shared/input/input.component';
@@ -39,6 +39,8 @@ export class ChatComponent {
 
   errorMessage: string | null = null;
   isAtBottom = true;
+  isStreaming = false;
+  streamingContent = '';
   private errorTimer: ReturnType<typeof setTimeout> | null = null;
   private programmaticScroll = false;
 
@@ -85,22 +87,37 @@ export class ChatComponent {
       }
 
       // add message optimistically
-      this.chat.message.push({
-        content: message,
-        isUser: true,
+      this.chat.message.push({ content: message, isUser: true });
+      this.scrollToBottom();
+
+      // begin streaming
+      this.isStreaming = true;
+      this.streamingContent = '';
+
+      await new Promise<void>((resolve, reject) => {
+        this.chatService.streamMessage(this.chat!._id!, message).subscribe({
+          next: (event: StreamEvent) => {
+            if (event.type === 'chunk') {
+              this.streamingContent += event.content;
+              if (this.isAtBottom) this.scrollToBottomInstant();
+            } else if (event.type === 'done') {
+              this.chat = event.chat;
+              this.isStreaming = false;
+              this.streamingContent = '';
+              this.scrollToBottom();
+              this.newMessage.emit(this.chat);
+              resolve();
+            } else if (event.type === 'error') {
+              reject(new Error(event.message));
+            }
+          },
+          error: reject,
+          complete: resolve,
+        });
       });
-      this.scrollToBottom();
-
-      // post message
-      this.chat = await firstValueFrom(
-        this.chatService.postMessage(this.chat._id, message),
-      );
-      this.scrollToBottom();
-
-      // emit update
-      this.newMessage.emit(this.chat);
     } catch (error) {
-      // Remove the optimistically-added user message so the spinner clears
+      this.isStreaming = false;
+      this.streamingContent = '';
       if (this.chat?.message?.length) {
         this.chat.message.pop();
       }
@@ -139,6 +156,11 @@ export class ChatComponent {
     if (this.programmaticScroll) return;
     const el = this.scrollContainer.nativeElement;
     this.isAtBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 20;
+  }
+
+  private scrollToBottomInstant() {
+    const el = this.scrollContainer?.nativeElement;
+    if (el) el.scrollTop = el.scrollHeight;
   }
 
   scrollToBottom() {

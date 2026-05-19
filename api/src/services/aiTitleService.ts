@@ -3,6 +3,9 @@ import { titleTemplate } from "../ai/ai-config/aiTemplates";
 import { ChatGroq } from "@langchain/groq";
 import { Model } from "../models/modelModel";
 
+// TODO: This needs to be updated to properly update the title of a chat, currnelty not working well.
+// TODO: Pleas update to use llama-3.3-70b-versatile model for the title generation.
+
 const titleChain = async (title: HumanMessage, model: Model) => {
   // convert my model into a ChatGroq model
   const groqModel = new ChatGroq({
@@ -19,7 +22,7 @@ const titleChain = async (title: HumanMessage, model: Model) => {
 
 export const newAiTitle = async (
   message: string,
-  model: Model
+  model: Model,
 ): Promise<string> => {
   try {
     if (!message) {

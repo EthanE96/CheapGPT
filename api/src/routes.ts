@@ -7,6 +7,7 @@ import {
   getChats,
   postChat,
   postMessage,
+  postMessageStream,
   patchChat,
 } from "./controllers/chatController";
 import { authLogout, checkAuthStatus } from "./controllers/authController";
@@ -33,6 +34,7 @@ router.get("/chats/:id", isAuthenticated, getChat);
 router.patch("/chats/:id", isAuthenticated, patchChat);
 router.delete("/chats/:id", isAuthenticated, deleteChat);
 router.delete("/chats", isAuthenticated, deleteChats);
+router.post("/chats/:id/messages/stream", isAuthenticated, postMessageStream);
 router.post("/chats/:id/messages", isAuthenticated, postMessage);
 
 //* AI Models

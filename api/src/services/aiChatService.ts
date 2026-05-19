@@ -69,7 +69,7 @@ const chatChain = async (
   return output.messages[output.messages.length - 1];
 };
 
-const convertMessages = (
+export const convertMessages = (
   message: Message[]
 ): (SystemMessage | HumanMessage | AIMessage)[] => {
   return message.map((message) => {
@@ -88,6 +88,36 @@ const convertMessages = (
  * @param newMessage The new message to process
  * @returns The updated chat with the AI's response
  */
+export async function* streamAiMessage(
+  chat: Chat,
+  newMessage: string,
+  model: Model
+): AsyncGenerator<
+  { type: "chunk"; content: string } | { type: "done"; tokens: any }
+> {
+  chat.message = chat.message || [];
+  chat.message.push({ content: newMessage, isUser: true });
+  const messages = convertMessages(chat.message);
+  const input = { messages: [...messages, new HumanMessage(newMessage)] };
+
+  const groqModel = new ChatGroq({ model: model.modelName });
+  const chain = getChatTemplate(model).pipe(groqModel);
+  const trimmed = await trimmer.invoke(input.messages);
+
+  const stream = await chain.stream({ messages: trimmed });
+
+  let tokens: any = { totalTokens: 0, promptTokens: 0, completionTokens: 0 };
+  for await (const chunk of stream) {
+    if (typeof chunk.content === "string" && chunk.content.length > 0) {
+      yield { type: "chunk", content: chunk.content };
+    }
+    if (chunk.response_metadata?.tokenUsage) {
+      tokens = chunk.response_metadata.tokenUsage;
+    }
+  }
+  yield { type: "done", tokens };
+}
+
 export const newAiMessage = async (
   chat: Chat,
   newMessage: string,
