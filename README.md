@@ -7,8 +7,8 @@
 </p>
 
 <p align="center">
-   <b>A full-stack AI chat application powered by multiple LLMs — fast, cheap, and surprisingly good.</b><br>
-   <i>Real-time streaming responses, multiple models, and a clean ChatGPT-style interface.</i>
+   <b>A full-stack AI chat application powered by multiple LLMs</b><br>
+   <i> Free, fast, and accessible LLMs for everyone.</i>
 </p>
 
 ---
@@ -30,15 +30,18 @@
 
 **New Chat**
 
-<!-- Add screenshot here -->
+   <img src="ui/public/docs/new_chat.png" alt="CheapGPT Logo" width="800"/>
 
 </div>
+
+<br>
+<br>
 
 <div align="center">
 
 **Chat in Progress**
 
-<!-- Add screenshot here -->
+   <img src="ui/public/docs/in_progress_chat.png" alt="CheapGPT Logo" width="800"/>
 
 </div>
 
@@ -75,9 +78,12 @@ CheapGPT is a monorepo AI chat app built on the MEAN stack. It exposes multiple 
 
 **Infrastructure:**
 
-- Azure App Service (API)
-- Azure Static Web Apps (UI)
+- Azure App Service (API / UI)
+- Azure Cosmos DB (MongoDB)
+- Azure Key Vault (Secrets)
+- Azure Managed Identity (Auth)
 - GitHub Actions (CI/CD)
+  xw
 
 ---
 
@@ -187,6 +193,6 @@ npm run deploy:prod
 
 MIT License
 
-Copyright (c) 2025 Ethan Edwards <EthanAEdwards5@outlook.com>
+Copyright (c) 2024-2026 Ethan Edwards <EthanAEdwards5@outlook.com>
 
 ---
