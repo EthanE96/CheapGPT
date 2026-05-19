@@ -79,14 +79,14 @@ export class ChatService {
   }
 
   //^ Stream Message
-  streamMessage(chatId: string, message: string): Observable<StreamEvent> {
+  streamMessage(chatId: string, message: string, style: string = 'balanced'): Observable<StreamEvent> {
     return new Observable<StreamEvent>((subscriber) => {
       const controller = new AbortController();
 
       fetch(`${this.baseURL}/chats/${chatId}/messages/stream`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: message }),
+        body: JSON.stringify({ content: message, style }),
         credentials: 'include',
         signal: controller.signal,
       })

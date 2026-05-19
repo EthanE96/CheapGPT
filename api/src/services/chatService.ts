@@ -106,9 +106,9 @@ export const createMessage = async (
       throw new Error("LLM model not found");
     }
 
-    // if new message, add new title
-    if (!lastMessage || lastMessage.content !== newMessage) {
-      const title = await newAiTitle(newMessage, model);
+    // generate title only on the first message
+    if (!lastMessage) {
+      const title = await newAiTitle(newMessage);
       chat.title = title;
     }
 

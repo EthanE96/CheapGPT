@@ -5,17 +5,29 @@ import {
 } from "@langchain/core/prompts";
 import { Model } from "../../models/modelModel";
 
-export const getChatTemplate = (model: Model) => {
+export type ResponseStyle = "concise" | "balanced" | "detailed";
+
+const stylePrefix: Record<ResponseStyle, string> = {
+  concise:
+    "Respond as briefly as possible. Use short sentences and bullet points where appropriate. Skip all preamble and filler. ",
+  balanced: "",
+  detailed:
+    "Provide a thorough, comprehensive response. Include context, examples, and elaboration. Cover all relevant aspects in depth. ",
+};
+
+export const getChatTemplate = (model: Model, style: ResponseStyle = "balanced") => {
   if (!model.systemPrompt) {
     throw new Error("No model provided");
   }
 
+  const systemPrompt = stylePrefix[style] + model.systemPrompt;
+
   return ChatPromptTemplate.fromMessages([
-    ["system", model.systemPrompt],
+    ["system", systemPrompt],
     new MessagesPlaceholder("messages"),
   ]);
 };
 
 export const titleTemplate = PromptTemplate.fromTemplate(
-  "You are my title maker. You will analyze the message provided and create a very short and concise title for the chat. Use as few words as possible and NEVER more than one sentence. Never include periods. Here is the message: {title}",
+  "Generate a very short chat title (3-6 words max) for this message. Reply with only the title, no punctuation, no quotes: {message}",
 );

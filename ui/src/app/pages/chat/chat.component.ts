@@ -10,6 +10,19 @@ import {
 import { Chat, StreamEvent } from '../../models/chat.model';
 import { ChatService } from '../../services/chat.service';
 import { marked } from 'marked';
+import { markedHighlight } from 'marked-highlight';
+import hljs from 'highlight.js';
+
+marked.use(
+  markedHighlight({
+    emptyLangClass: 'hljs',
+    langPrefix: 'hljs language-',
+    highlight(code, lang) {
+      const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+      return hljs.highlight(code, { language }).value;
+    },
+  }),
+);
 import { InputComponent } from '../../shared/input/input.component';
 import { NewChatComponent } from './new-chat/new-chat.component';
 import { LucideAngularModule, ArrowDown } from 'lucide-angular';
@@ -41,6 +54,7 @@ export class ChatComponent {
   isAtBottom = true;
   isStreaming = false;
   streamingContent = '';
+  currentStyle = 'balanced';
   private errorTimer: ReturnType<typeof setTimeout> | null = null;
   private programmaticScroll = false;
 
@@ -58,6 +72,7 @@ export class ChatComponent {
     message: string,
     newMessage?: boolean,
     modelNameOverride?: string,
+    styleOverride?: string,
   ) {
     try {
       // get llm model
@@ -93,27 +108,30 @@ export class ChatComponent {
       // begin streaming
       this.isStreaming = true;
       this.streamingContent = '';
+      if (styleOverride) this.currentStyle = styleOverride;
 
       await new Promise<void>((resolve, reject) => {
-        this.chatService.streamMessage(this.chat!._id!, message).subscribe({
-          next: (event: StreamEvent) => {
-            if (event.type === 'chunk') {
-              this.streamingContent += event.content;
-              if (this.isAtBottom) this.scrollToBottomInstant();
-            } else if (event.type === 'done') {
-              this.chat = event.chat;
-              this.isStreaming = false;
-              this.streamingContent = '';
-              this.scrollToBottom();
-              this.newMessage.emit(this.chat);
-              resolve();
-            } else if (event.type === 'error') {
-              reject(new Error(event.message));
-            }
-          },
-          error: reject,
-          complete: resolve,
-        });
+        this.chatService
+          .streamMessage(this.chat!._id!, message, this.currentStyle)
+          .subscribe({
+            next: (event: StreamEvent) => {
+              if (event.type === 'chunk') {
+                this.streamingContent += event.content;
+                if (this.isAtBottom) this.scrollToBottomInstant();
+              } else if (event.type === 'done') {
+                this.chat = event.chat;
+                this.isStreaming = false;
+                this.streamingContent = '';
+                this.scrollToBottom();
+                this.newMessage.emit(this.chat);
+                resolve();
+              } else if (event.type === 'error') {
+                reject(new Error(event.message));
+              }
+            },
+            error: reject,
+            complete: resolve,
+          });
       });
     } catch (error) {
       this.isStreaming = false;

@@ -13,6 +13,7 @@ export interface Message {
   tokens?: Tokens;
   cost?: number;
   date?: Date;
+  style?: string;
 }
 
 export interface Tokens {

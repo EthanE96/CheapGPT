@@ -9,9 +9,11 @@ import {
   updateChat,
 } from "../services/chatService";
 import { streamAiMessage } from "../services/aiChatService";
+import { ResponseStyle } from "../ai/ai-config/aiTemplates";
 import { fetchModel } from "../services/modelService";
 import { newAiTitle } from "../services/aiTitleService";
 import { User } from "../models/userModel";
+import { Tokens } from "../models/chatModel";
 
 //^ Post Chat
 export const postChat = async (req: Request, res: Response) => {
@@ -135,10 +137,12 @@ export const postMessageStream = async (req: Request, res: Response) => {
     const model = await fetchModel(chat.modelId);
     if (!model) return res.status(404).json({ error: "Model not found" });
 
-    // Fire-and-forget title generation (same condition as createMessage)
+    const style: ResponseStyle = req.body.style ?? "balanced";
+
+    // Generate title only on the first message, fire-and-forget
     const lastMessage = chat.message?.[chat.message.length - 1];
-    if (!lastMessage || lastMessage.content !== req.body.content) {
-      newAiTitle(req.body.content, model)
+    if (!lastMessage) {
+      newAiTitle(req.body.content)
         .then((title) => {
           chat.title = title;
         })
@@ -154,7 +158,7 @@ export const postMessageStream = async (req: Request, res: Response) => {
       res.write(`data: ${JSON.stringify(data)}\n\n`);
 
     let fullContent = "";
-    let finalTokens: any = {
+    let finalTokens: Tokens = {
       totalTokens: 0,
       promptTokens: 0,
       completionTokens: 0,
@@ -165,6 +169,7 @@ export const postMessageStream = async (req: Request, res: Response) => {
         chat,
         req.body.content,
         model,
+        style,
       )) {
         if (event.type === "chunk") {
           fullContent += event.content;
@@ -178,6 +183,7 @@ export const postMessageStream = async (req: Request, res: Response) => {
         content: fullContent,
         isUser: false,
         tokens: finalTokens,
+        style,
       });
       if (!chat.totalTokens) {
         chat.totalTokens = {

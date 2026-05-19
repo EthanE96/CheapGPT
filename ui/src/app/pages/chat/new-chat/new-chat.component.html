@@ -1,7 +1,27 @@
 <div class="flex flex-col w-2/3 m-auto justify-center" style="height: 90vh">
   <h1 class="text-3xl font-bold mx-auto py-2">How can I help you?</h1>
   <app-input (valueOut)="onSend($event)"></app-input>
-  <div class="flex justify-center mt-2">
+  <div class="flex justify-center gap-1 mt-2">
+    <!-- Style picker -->
+    <div class="dropdown dropdown-top">
+      <div
+        tabindex="0"
+        role="button"
+        class="btn btn-ghost btn-sm gap-2 text-base-content/60"
+      >
+        {{ selectedStyleLabel }}
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+      </div>
+      <ul tabindex="0" class="dropdown-content menu bg-base-200 rounded-box w-36 p-2 shadow mb-1">
+        <li *ngFor="let s of styles">
+          <a (click)="selectedStyle = s.value" [class.active]="s.value === selectedStyle">
+            {{ s.label }}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Model picker -->
     <div class="dropdown dropdown-top">
       <div
         tabindex="0"
@@ -36,9 +56,20 @@
           <a
             (click)="selectModel(model)"
             [class.active]="model.modelName === selectedModelName"
+            class="flex items-center justify-between"
           >
-            <img [src]="model.logo" class="w-4 h-4 object-contain" />
-            {{ model.modelDisplayName }}
+            <span class="flex items-center gap-2">
+              <img [src]="model.logo" class="w-4 h-4 object-contain" />
+              {{ model.modelDisplayName }}
+            </span>
+            <span
+              *ngIf="modelDescriptions[model.modelName]"
+              class="tooltip tooltip-left"
+              [attr.data-tip]="modelDescriptions[model.modelName]"
+              (click)="$event.stopPropagation()"
+            >
+              <i-lucide [img]="Info" class="w-3.5 h-3.5 opacity-40"></i-lucide>
+            </span>
           </a>
         </li>
       </ul>

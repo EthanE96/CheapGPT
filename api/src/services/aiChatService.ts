@@ -15,7 +15,7 @@ import {
 
 //AI
 import { trimmer } from "../ai/ai-config/aiConfig";
-import { getChatTemplate } from "../ai/ai-config/aiTemplates";
+import { getChatTemplate, ResponseStyle } from "../ai/ai-config/aiTemplates";
 
 //Models
 import { Chat, Message } from "../models/chatModel";
@@ -91,7 +91,8 @@ export const convertMessages = (
 export async function* streamAiMessage(
   chat: Chat,
   newMessage: string,
-  model: Model
+  model: Model,
+  style: ResponseStyle = "balanced"
 ): AsyncGenerator<
   { type: "chunk"; content: string } | { type: "done"; tokens: any }
 > {
@@ -101,7 +102,7 @@ export async function* streamAiMessage(
   const input = { messages: [...messages, new HumanMessage(newMessage)] };
 
   const groqModel = new ChatGroq({ model: model.modelName });
-  const chain = getChatTemplate(model).pipe(groqModel);
+  const chain = getChatTemplate(model, style).pipe(groqModel);
   const trimmed = await trimmer.invoke(input.messages);
 
   const stream = await chain.stream({ messages: trimmed });
@@ -111,8 +112,12 @@ export async function* streamAiMessage(
     if (typeof chunk.content === "string" && chunk.content.length > 0) {
       yield { type: "chunk", content: chunk.content };
     }
-    if (chunk.response_metadata?.tokenUsage) {
-      tokens = chunk.response_metadata.tokenUsage;
+    if (chunk.usage_metadata) {
+      tokens = {
+        promptTokens: chunk.usage_metadata.input_tokens,
+        completionTokens: chunk.usage_metadata.output_tokens,
+        totalTokens: chunk.usage_metadata.total_tokens,
+      };
     }
   }
   yield { type: "done", tokens };

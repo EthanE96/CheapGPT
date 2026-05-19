@@ -8,8 +8,6 @@
   </div>
 </div>
 
-<!-- TODO: The markdown response from the LLM, if it includes a table should be formated as a table that matches the style / color mode of the theme  -->
-<!-- Maybe include a markdown library that exists to format our chat messages perfeltly? So it would look like chatgpt -->
 
 <ng-container *ngIf="chat?.message?.length; else newChat">
   <div class="flex flex-col w-5/6 mx-auto" style="height: 90vh">
@@ -45,7 +43,8 @@
           <ng-container *ngIf="!message.isUser">
             <div class="chat-footer opacity-60 pl-2 pt-1 flex gap-3 text-xs">
               <span>Model: {{ (model$ | async)?.modelDisplayName }}</span>
-              <span>Tokens: {{ message.tokens?.totalTokens }}</span>
+              <span *ngIf="message.style">Style: {{ message.style | titlecase }}</span>
+              <span>Tokens: {{ message.tokens?.totalTokens | number }}</span>
             </div>
           </ng-container>
         </div>
@@ -76,6 +75,8 @@
 
 <ng-template #newChat>
   <app-new-chat
-    (newMessageOut)="sendMessage($event.message, true, $event.modelName)"
+    (newMessageOut)="
+      sendMessage($event.message, true, $event.modelName, $event.style)
+    "
   ></app-new-chat>
 </ng-template>

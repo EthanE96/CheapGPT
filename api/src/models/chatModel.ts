@@ -17,6 +17,7 @@ export interface Message {
   tokens?: Tokens;
   cost?: number;
   date?: Date;
+  style?: string;
 }
 
 export interface Tokens {
@@ -44,6 +45,7 @@ const chatSchema = new Schema<Chat>(
         },
         cost: { type: Number },
         date: { type: Date, default: Date.now },
+        style: { type: String },
       },
     ],
     modelId: { type: String, ref: "Model", required: true },
@@ -63,20 +65,5 @@ const chatSchema = new Schema<Chat>(
 
 // Index for fetching a user's chats sorted by most recently updated
 chatSchema.index({ userId: 1, updatedAt: -1 });
-
-// Middleware to calculate cost
-//! Comment out, as Groq does disclose cost per token.
-// chatSchema.pre("save", function (next) {
-//   const chat = this as Chat;
-//   if (chat.message && Array.isArray(chat.message)) {
-//     chat.message.forEach((msg) => {
-//       if (msg.tokens && msg.tokens.totalTokens) {
-//         msg.cost =
-//           msg.tokens.promptTokens * 0.003 + msg.tokens.completionTokens * 0.001;
-//       }
-//     });
-//   }
-//   next();
-// });
 
 export const Chat = mongoose.model<Chat>("Chat", chatSchema);
