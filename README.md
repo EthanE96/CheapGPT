@@ -7,8 +7,8 @@
 </p>
 
 <p align="center">
-   <b>A full-stack AI chat application powered by multiple LLMs</b><br>
-   <i> Free, fast, and accessible LLMs for everyone.</i>
+   <b>Free, fast, and accessible LLMs for everyone</b><br>
+   <i>A full-stack AI chat application powered by multiple LLMs.</i>
 </p>
 
 ---
