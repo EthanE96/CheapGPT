@@ -59,8 +59,6 @@ export class DrawerComponent implements OnInit {
 
   constructor(private chatService: ChatService) {}
 
-  // TODO: On clear chats, make the chat screen undefined to show the new chat screen
-
   ngOnInit(): void {
     this.loadChats();
   }
@@ -108,6 +106,8 @@ export class DrawerComponent implements OnInit {
     this.chatService.deleteChats().subscribe({
       complete: () => {
         this.loadChats();
+        this.selectedChat = undefined;
+        this.selectedChatChange.emit(undefined);
       },
     });
   }

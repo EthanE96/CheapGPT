@@ -9,16 +9,11 @@ import {
   postMessage,
   patchChat,
 } from "./controllers/chatController";
-import {
-  authLogout,
-  checkAuthStatus,
-} from "./controllers/authController";
+import { authLogout, checkAuthStatus } from "./controllers/authController";
 import { isAuthenticated } from "./middleware/authMiddleware";
 import { getModels } from "./controllers/modelController";
 
 const router = Router();
-
-// TODO: Add auth middleware to routes
 
 //^ Public routes
 // /api/health
@@ -52,7 +47,7 @@ router.get(
   "/auth/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
-  })
+  }),
 );
 router.get(
   "/auth/callback/google",
@@ -65,13 +60,13 @@ router.get(
       if (err) return next(err);
       res.redirect(process.env.UI_REDIRECT_URL!);
     });
-  }
+  },
 );
 
 // Github
 router.get(
   "/auth/github",
-  passport.authenticate("github", { scope: ["user:email"] })
+  passport.authenticate("github", { scope: ["user:email"] }),
 );
 router.get(
   "/auth/callback/github",
@@ -84,7 +79,7 @@ router.get(
       if (err) return next(err);
       res.redirect(process.env.UI_REDIRECT_URL!);
     });
-  }
+  },
 );
 
 export default router;
