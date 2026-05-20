@@ -83,7 +83,6 @@ CheapGPT is a monorepo AI chat app built on the MEAN stack. It exposes multiple 
 - Azure Key Vault (Secrets)
 - Azure Managed Identity (Auth)
 - GitHub Actions (CI/CD)
-  xw
 
 ---
 
@@ -155,30 +154,8 @@ npm run watch
 
 ## CI/CD & GitHub Workflows
 
-- **API:** Deployed to Azure App Service on push to `main` ([main_cheapgpt.yml](.github/workflows/main_cheapgpt.yml))
-- **UI:** Deployed to Azure Static Web Apps on push/PR
-
----
-
-## Deployment
-
-### API
-
-```bash
-cd api
-npm run build
-```
-
-### UI
-
-```bash
-cd ui
-# Development
-npm run deploy:dev
-
-# Production
-npm run deploy:prod
-```
+- **API:** Deployed to Azure App Service on push to `main` or PRs
+- **UI:** Deployed to Azure App Service on push to `main` or PRs
 
 ---
 

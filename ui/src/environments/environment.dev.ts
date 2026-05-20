@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api',
+  apiUrl: 'https://cheapgpt-hwg9ghc9h4dtcwa8.westus2-01.azurewebsites.net/api',
 };
