@@ -66,6 +66,9 @@ export class DrawerComponent implements OnInit {
   onSelectChat(chat: Chat) {
     this.selectedChat = chat;
     this.selectedChatChange.emit(chat);
+    if (window.innerWidth < 768) {
+      this.onDrawerChange();
+    }
   }
 
   onNewChat() {

@@ -31,6 +31,7 @@ export class HeaderComponent {
   @Input() isThemeDisabled: boolean = false;
   @Output() isDrawerOpenChange = new EventEmitter();
   @Output() currentThemeChange = new EventEmitter();
+  @Output() newChatRequest = new EventEmitter();
 
   currentTheme = this.themeComponent.currentTheme;
   imgTheme = this.currentTheme === 'dark' ? Sun : Moon;
@@ -64,6 +65,10 @@ export class HeaderComponent {
 
   onApp() {
     this.router.navigate(['/app']);
+  }
+
+  onNewChat() {
+    this.newChatRequest.emit();
   }
 
   onHome() {

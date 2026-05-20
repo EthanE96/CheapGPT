@@ -1,5 +1,5 @@
 ::ng-deep .chat-content {
-  max-width: 85%;
+  max-width: 90%;
 
   // Code
   pre {
@@ -66,9 +66,13 @@
     @apply my-1;
   }
 
-  // Tables
+  // Tables — block + max-width forces scroll instead of expanding the bubble
   table {
-    @apply w-full border-collapse my-3 text-xs;
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    @apply border-collapse my-3 text-xs;
 
     th, td {
       @apply px-3 py-2 text-left;

@@ -31,6 +31,11 @@ export class LayoutComponent implements OnInit {
     this.selectedChat = chat;
   }
 
+  onNewChat() {
+    this.selectedChat = undefined;
+    this.newMessage = false;
+  }
+
   onDrawerChange() {
     this.isDrawerOpen = !this.isDrawerOpen;
     this.isDrawerOpenChange.emit(this.isDrawerOpen);

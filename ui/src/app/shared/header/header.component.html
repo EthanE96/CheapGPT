@@ -3,23 +3,23 @@
   <div
     class="navbar flex w-full px-4 md:w-3/4 md:px-0 pt-4 pb-2 mx-auto justify-between bg-transparent"
   >
-    <div class="flex gap-3 items-center btn btn-ghost" (click)="onHome()">
+    <div class="flex gap-2 items-center btn btn-ghost" (click)="onHome()">
       <img class="w-8 h-8" [src]="logo" alt="CheapGPT Logo" />
-      <h1 class="text-2xl font-bold">CheapGPT</h1>
+      <h1 class="text-2xl font-bold hidden sm:block">CheapGPT</h1>
     </div>
 
-    <div class="flex gap-3">
+    <div class="flex gap-1 sm:gap-3 items-center">
       <ng-container *ngIf="!isThemeDisabled">
-        <button class="btn btn-square btn-ghost" (click)="onThemeToggle()">
+        <button class="btn btn-square btn-ghost btn-sm sm:btn-md" (click)="onThemeToggle()">
           <span><i-lucide [img]="imgTheme" class="w-5 h-5"></i-lucide></span>
         </button>
       </ng-container>
 
-      <button class="btn btn-ghost" (click)="onLogin()">
-        <span>Login</span>
+      <button class="btn btn-ghost btn-sm sm:btn-md" (click)="onLogin()">
+        Login
       </button>
 
-      <button class="btn btn-outline btn-primary" (click)="onSignup()">
+      <button class="btn btn-outline btn-primary btn-sm sm:btn-md" (click)="onSignup()">
         Sign Up
       </button>
     </div>
@@ -39,10 +39,10 @@
 
       <div
         class="flex flex-row items-center gap-3 btn btn-ghost"
-        (click)="onApp()"
+        (click)="onNewChat()"
       >
-        <img class="w-8 h-8" [src]="logo" alt="CheapGPT Logo" />
-        <h1 class="text-2xl font-bold">CheapGPT</h1>
+        <img class="w-7 h-7 md:w-8 md:h-8" [src]="logo" alt="CheapGPT Logo" />
+        <h1 class="text-xl md:text-2xl font-bold hidden sm:block">CheapGPT</h1>
       </div>
     </div>
     <ng-container *ngIf="!isThemeDisabled">

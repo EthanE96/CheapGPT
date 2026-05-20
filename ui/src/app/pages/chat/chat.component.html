@@ -14,7 +14,7 @@
     <div class="flex-none h-10"></div>
     <div
       #scrollContainer
-      class="grow overflow-y-auto scroll-smooth px-5"
+      class="grow overflow-y-auto overflow-x-hidden scroll-smooth px-2 md:px-5"
       (scroll)="onScroll()"
     >
       <ng-container *ngIf="chat">
@@ -41,10 +41,14 @@
             [innerHTML]="toHTML(message.content)"
           ></div>
           <ng-container *ngIf="!message.isUser">
-            <div class="chat-footer opacity-60 pl-2 pt-1 flex gap-3 text-xs">
-              <span>Model: {{ (model$ | async)?.modelDisplayName }}</span>
-              <span *ngIf="message.style">Style: {{ message.style | titlecase }}</span>
-              <span>Tokens: {{ message.tokens?.totalTokens | number }}</span>
+            <div class="chat-footer opacity-50 pl-2 pt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs">
+              <span>{{ (model$ | async)?.modelDisplayName }}</span>
+              <ng-container *ngIf="message.style">
+                <span class="opacity-40">·</span>
+                <span>{{ message.style | titlecase }}</span>
+              </ng-container>
+              <span class="opacity-40">·</span>
+              <span>{{ message.tokens?.totalTokens | number }} tokens</span>
             </div>
           </ng-container>
         </div>
