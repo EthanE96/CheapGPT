@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgIf } from '@angular/common';
 import { ChatComponent } from '../chat/chat.component';
 import { Chat } from '../../models/chat.model';
@@ -12,9 +12,15 @@ import { HeaderComponent } from '../../shared/header/header.component';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
   @Input() isDrawerOpen: boolean = true;
   @Output() isDrawerOpenChange = new EventEmitter();
+
+  ngOnInit() {
+    if (typeof window !== 'undefined') {
+      this.isDrawerOpen = window.innerWidth >= 768;
+    }
+  }
 
   selectedChat?: Chat;
   newMessage: boolean = false;

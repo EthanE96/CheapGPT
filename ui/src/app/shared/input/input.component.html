@@ -1,14 +1,15 @@
-<div class="flex-none flex gap-2 mt-4 pb-3">
-  <input
+<div class="flex-none flex gap-2 mt-4 pb-3 items-end">
+  <textarea
     #input
-    type="text"
     placeholder="Insert message"
-    class="input input-bordered w-full"
-    (keyup.enter)="sendValue(input.value); input.value = ''"
-  />
+    class="textarea textarea-bordered w-full resize-none"
+    rows="1"
+    (keydown.enter)="onEnterKey($event, input)"
+    (input)="autoResize(input)"
+  ></textarea>
   <button
-    class="btn btn-primary btn-square"
-    (click)="sendValue(input.value); input.value = ''"
+    class="btn btn-primary"
+    (click)="sendValue(input.value); input.value = ''; autoResize(input)"
   >
     <i-lucide [img]="Send" class="w-5 h-5"></i-lucide>
   </button>
