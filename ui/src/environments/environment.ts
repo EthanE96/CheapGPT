@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.cheapgpt.eddyappz.com/api',
+  apiUrl: 'https://cheapgpt-api.eddyappz.com/api',
 };
