@@ -1,0 +1,32 @@
+networks:
+  default:
+  public-net:
+    name: public-net
+    external: true
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: cheapgpt-api
+    env_file: ./api/.env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - default # reaches mongo by service name
+      - public-net # reachable from the shared cloudflared tunnel as http://cheapgpt-api:3000
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

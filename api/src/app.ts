@@ -1,6 +1,5 @@
-import express, { Request, Response } from "express";
+import express, { Request } from "express";
 import dotenv from "dotenv";
-import path from "path";
 import cors from "cors";
 import session from "express-session";
 import morgan from "morgan";
@@ -79,14 +78,6 @@ app.use(morgan(":method :url :status - :response-time ms body:body"));
 
 // Routes
 app.use("/api", routes);
-
-// Serve Angular static files
-app.use(express.static(path.join(__dirname, "../public")));
-
-// Angular catch-all — must be last
-app.get("*", (_req, res: Response) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
-});
 
 app.listen(PORT, () => {
   console.log(`Server is running ${URL}/api`);
