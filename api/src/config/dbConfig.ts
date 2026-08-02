@@ -9,7 +9,6 @@ export const connectDB = async (mongoURI: string, dbName?: string) => {
 
   try {
     await mongoose.connect(mongoURI, {
-      tls: true,
       retryWrites: false,
       ...(dbName && { dbName }),
     });
