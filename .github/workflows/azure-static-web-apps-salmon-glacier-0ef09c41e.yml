@@ -31,6 +31,7 @@ jobs:
           app_location: "./ui" # App source code path
           api_location: "" # Api source code path - optional
           output_location: "dist/ui/browser" # Built app content directory - optional
+          app_build_command: "npm run build:prod" # Forces the Angular `production` config - without this, Oryx's default build skips the environment.ts fileReplacement and outputHashing, shipping the wrong apiUrl
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:

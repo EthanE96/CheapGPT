@@ -24,9 +24,20 @@ services:
 
   mongo:
     image: mongo:7
+    container_name: mongo
     restart: unless-stopped
+    # Bound to the host's Tailscale IP specifically (not 0.0.0.0) so it's reachable
+    # for DB tools (Compass, mongosh) only via the tailnet, never the LAN or public internet.
+    ports:
+      - "100.84.21.127:27017:27017"
     volumes:
       - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 volumes:
   mongo-data:
