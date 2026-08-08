@@ -26,6 +26,7 @@ services:
     image: mongo:7
     container_name: mongo
     restart: unless-stopped
+    command: ["mongod", "--auth"]
     # Bound to the host's Tailscale IP specifically (not 0.0.0.0) so it's reachable
     # for DB tools (Compass, mongosh) only via the tailnet, never the LAN or public internet.
     ports:
