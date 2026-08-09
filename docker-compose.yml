@@ -1,5 +1,7 @@
 networks:
-  default:
+  dev-net:
+    name: dev-net
+    external: true
   public-net:
     name: public-net
     external: true
@@ -19,26 +21,5 @@ services:
       retries: 3
       start_period: 10s
     networks:
-      - default # reaches mongo by service name
+      - dev-net # reaches mongo by service name (shared Home_Lab dev-net stack, internal-only network)
       - public-net # reachable from the shared cloudflared tunnel as http://cheapgpt-api:3000
-
-  mongo:
-    image: mongo:7
-    container_name: mongo
-    restart: unless-stopped
-    command: ["mongod", "--auth"]
-    # Bound to the host's Tailscale IP specifically (not 0.0.0.0) so it's reachable
-    # for DB tools (Compass, mongosh) only via the tailnet, never the LAN or public internet.
-    ports:
-      - "100.84.21.127:27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-
-volumes:
-  mongo-data:
